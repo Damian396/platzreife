@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1C4433">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Platzreife">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<title>Etikette & Regeln — Lernbroschüre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#10231A;
+  --ink-soft:#54655B;
+  --paper:#EFF2EA;
+  --card:#FFFFFF;
+  --fair:#2F6B4F;
+  --fair-dk:#1C4433;
+  --sand:#E7D5AC;
+  --sand-dk:#8A7442;
+  --pin:#BE3A2B;
+  --line:#D6DCCE;
+  --ok:#2F6B4F;
+  --shadow:0 1px 0 var(--line);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Inter Tight",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.disp{font-family:"Bricolage Grotesque","Inter Tight",system-ui,sans-serif;font-weight:800;letter-spacing:-0.02em;line-height:1.1;margin:0}
+.app{max-width:620px;margin:0 auto;padding:0 16px 40px}
+
+/* ---------- header ---------- */
+.top{
+  margin:0 -16px 0;padding:14px 16px 12px;
+  background:var(--fair-dk);
+  color:#EDF3EE;
+  border-bottom:3px solid var(--sand);
+}
+.top .row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.top h1{font-size:20px;color:#fff}
+.top p{margin:2px 0 0;font-size:12.5px;color:#AFC7B8}
+.count{text-align:right;flex:none}
+.count b{font-family:"Bricolage Grotesque",sans-serif;font-size:30px;font-weight:800;display:block;line-height:1;color:var(--sand)}
+.count span{font-size:11px;color:#AFC7B8;display:block}
+.bar{height:5px;background:#2A5C45;border-radius:99px;margin-top:12px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--sand);transition:width .4s ease}
+.bar-lab{display:flex;justify-content:space-between;font-size:11px;color:#AFC7B8;margin-top:5px}
+
+/* ---------- nav ---------- */
+nav{
+  display:flex;background:var(--card);
+  border-bottom:1px solid var(--line);
+  margin:0 -16px 16px;
+}
+nav button{
+  flex:1;background:none;border:0;padding:9px 2px 8px;cursor:pointer;
+  font-family:inherit;font-size:11px;color:var(--ink-soft);
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  border-bottom:3px solid transparent;margin-bottom:-1px;
+}
+nav button svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+nav button[aria-selected="true"]{color:var(--fair);border-bottom-color:var(--fair);font-weight:600}
+nav button:focus-visible{outline:2px solid var(--fair);outline-offset:-2px}
+
+/* ---------- blocks ---------- */
+section[hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 15px;margin-bottom:12px}
+.lead{font-size:15px;color:var(--ink-soft);margin:0 0 14px}
+h2.sec{font-size:22px;margin:20px 0 8px}
+h2.sec:first-child{margin-top:4px}
+
+/* scorecard strip */
+.strip{display:flex;gap:0;overflow-x:auto;margin:0 -16px 14px;padding:0 16px;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.cell{
+  flex:none;width:62px;border:1px solid var(--line);border-right:0;background:var(--card);
+  text-align:center;padding:7px 2px 8px;cursor:pointer;font-family:inherit;color:inherit;
+}
+.cell:first-child{border-radius:8px 0 0 8px}
+.cell:last-child{border-right:1px solid var(--line);border-radius:0 8px 8px 0}
+.cell b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:17px;font-weight:800}
+.cell span{display:block;font-size:9.5px;color:var(--ink-soft);line-height:1.25;margin-top:2px;height:24px;overflow:hidden}
+.cell em{display:block;font-style:normal;font-size:11px;margin-top:4px;color:var(--line)}
+.cell.on{background:var(--fair-dk);color:#fff}
+.cell.on span{color:#AFC7B8}
+.cell.done em{color:var(--sand-dk)}
+.cell.on.done em{color:var(--sand)}
+
+/* tasks */
+.task{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--line)}
+.task:last-child{border-bottom:0;padding-bottom:2px}
+.task input{appearance:none;flex:none;width:21px;height:21px;margin:1px 0 0;border:1.5px solid var(--fair);border-radius:6px;cursor:pointer;position:relative;background:#fff}
+.task input:checked{background:var(--fair)}
+.task input:checked::after{content:"";position:absolute;left:7px;top:3px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(42deg)}
+.task input:focus-visible{outline:2px solid var(--fair);outline-offset:2px}
+.task label{font-size:14.5px;cursor:pointer;flex:1}
+.task input:checked + label{color:var(--ink-soft);text-decoration:line-through}
+.mini{font-size:12px;color:var(--ink-soft)}
+
+/* chapters */
+details.ch{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:9px;overflow:hidden}
+details.ch>summary{
+  padding:13px 15px;cursor:pointer;list-style:none;display:flex;gap:11px;align-items:center;
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:15.5px;
+}
+details.ch>summary::-webkit-details-marker{display:none}
+details.ch>summary::after{content:"";margin-left:auto;width:8px;height:8px;border-right:2px solid var(--ink-soft);border-bottom:2px solid var(--ink-soft);transform:rotate(45deg) translateY(-2px);transition:transform .2s}
+details.ch[open]>summary::after{transform:rotate(-135deg) translateY(-2px)}
+details.ch>summary .num{
+  flex:none;width:26px;height:26px;border-radius:50%;background:var(--paper);
+  display:grid;place-items:center;font-size:12.5px;color:var(--fair);border:1px solid var(--line)
+}
+.ch-body{padding:2px 15px 15px;font-size:14.7px}
+.ch-body p{margin:0 0 10px}
+.ch-body ul{margin:0 0 11px;padding-left:19px}
+.ch-body li{margin-bottom:6px}
+.ch-body h4{font-family:"Bricolage Grotesque",sans-serif;font-size:14px;margin:15px 0 6px;font-weight:600}
+.ch-body table{width:100%;border-collapse:collapse;font-size:13.5px;margin:0 0 11px}
+.ch-body th,.ch-body td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.ch-body th{font-weight:600;background:var(--paper)}
+.merk{background:var(--sand);border-radius:9px;padding:10px 12px;margin:0 0 11px;font-size:14px}
+.merk b{display:block;font-size:11.5px;color:var(--sand-dk);margin-bottom:3px;font-weight:600}
+.warn{border-left:3px solid var(--pin);padding:2px 0 2px 11px;margin:0 0 11px}
+kbd{font:inherit;font-weight:600;color:var(--pin)}
+
+/* flashcards */
+.fc{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:24px 18px;min-height:210px;display:flex;flex-direction:column;
+  justify-content:center;text-align:center;margin-bottom:12px;
+}
+.fc .tag{font-size:11px;color:var(--fair);margin-bottom:10px}
+.fc .q{font-family:"Bricolage Grotesque",sans-serif;font-size:19px;font-weight:600;line-height:1.3}
+.fc .a{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:15px;text-align:left}
+.btns{display:flex;gap:8px}
+button.b{
+  flex:1;font-family:inherit;font-size:14.5px;font-weight:600;padding:12px;border-radius:10px;
+  border:1px solid var(--fair);background:var(--fair);color:#fff;cursor:pointer;
+}
+button.b.ghost{background:var(--card);color:var(--fair)}
+button.b.warnb{border-color:var(--pin);color:var(--pin);background:var(--card)}
+button.b:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.boxes{display:flex;gap:5px;margin-bottom:12px}
+.box{flex:1;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 2px}
+.box b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:16px}
+.box span{font-size:9.5px;color:var(--ink-soft)}
+
+/* quiz */
+.opt{
+  display:block;width:100%;text-align:left;font-family:inherit;font-size:14.7px;
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:11px 13px;margin-bottom:8px;cursor:pointer;color:inherit;
+}
+.opt:focus-visible{outline:2px solid var(--fair);outline-offset:2px}
+.opt.right{border-color:var(--fair);background:#E8F1EB;font-weight:600}
+.opt.wrong{border-color:var(--pin);background:#FBEBE9}
+.opt[disabled]{cursor:default}
+.expl{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--fair);border-radius:0 10px 10px 0;padding:11px 13px;font-size:14px;margin-bottom:12px}
+.qhead{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-soft);margin-bottom:9px}
+.score{font-family:"Bricolage Grotesque",sans-serif;font-size:44px;font-weight:800;line-height:1}
+.pill{display:inline-block;font-size:11.5px;padding:3px 9px;border-radius:99px;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);margin:0 5px 5px 0}
+.pill.on{background:var(--fair);border-color:var(--fair);color:#fff}
+input[type=date]{font-family:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:inherit}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <div class="row">
+      <div>
+        <h1>Etikette &amp; Regeln</h1>
+        <p id="subtitle">Vorbereitung Regel- und Etikettenkurs</p>
+      </div>
+      <div class="count"><b id="cd">7</b><span>Tage bis Kurs</span></div>
+    </div>
+    <div class="bar"><i id="prog"></i></div>
+    <div class="bar-lab"><span id="progtxt">Noch nichts gelernt</span><span id="progpct">0%</span></div>
+  </header>
+
+  <nav id="nav"></nav>
+
+  <section id="v-plan"></section>
+  <section id="v-wissen" hidden></section>
+  <section id="v-karten" hidden></section>
+  <section id="v-quiz" hidden></section>
+  <section id="v-methode" hidden></section>
+
+</div>
+
+<script>
+/* ============ DATEN ============ */
+
+const CH = [
+{n:1,t:"Die 5 Kriterien der Etikette",h:`
+<p>Swiss Golf prüft die Etikette an genau fünf Punkten. Wenn du im Kurs oder in der Prüfung unsicher bist: fast jede Etikette-Frage lässt sich einem dieser fünf zuordnen.</p>
+<div class="merk"><b>Merksatz</b><b style="font-size:15px;color:#10231A">S-R-P-V-S: <em>S</em>ehr <em>r</em>uhige <em>P</em>rofis <em>v</em>ermeiden <em>S</em>chäden</b>
+Sicherheit &middot; Rücksicht &middot; Pace of Play &middot; Vorrecht &middot; Schonung</div>
+<table>
+<tr><th>Kriterium</th><th>Kernidee</th></tr>
+<tr><td>Sicherheit</td><td>Nie schlagen, solange jemand in Reichweite ist. "Fore!" rufen.</td></tr>
+<tr><td>Rücksicht</td><td>Still stehen und schweigen, während andere spielen.</td></tr>
+<tr><td>Pace of Play</td><td>Zügig spielen, Anschluss zur Gruppe vorne halten, Schnellere durchlassen.</td></tr>
+<tr><td>Vorrecht</td><td>Wer ist dran? Ehre am Abschlag, sonst der Ball am weitesten vom Loch.</td></tr>
+<tr><td>Schonung</td><td>Divots zurücklegen, Pitchmarken reparieren, Bunker harken.</td></tr>
+</table>
+<p class="mini">Die Etikette ist kein Benimm-Ritual, sondern der Grund, warum 4 Gruppen gleichzeitig sicher und zügig über denselben Platz kommen.</p>`},
+
+{n:2,t:"Sicherheit",h:`
+<ul>
+<li>Erst schlagen, wenn die Gruppe vor dir <b>ausser Reichweite</b> ist — im Zweifel lieber einmal zu lange warten.</li>
+<li>Beim Probeschwung: Abstand halten, nie in Richtung von Personen schwingen.</li>
+<li>Nie in der Verlängerung der Schlagrichtung oder direkt neben dem Schlagenden stehen. Richtig: schräg hinter dem Spieler.</li>
+<li>Fliegt dein Ball Richtung Personen: laut und sofort <kbd>Fore!</kbd> rufen.</li>
+<li>Hörst du "Fore": <b>ducken, Kopf und Nacken mit Armen schützen, wegdrehen</b> — nicht suchen, woher der Ball kommt.</li>
+<li>Gewitter oder Sirene (ein langer Ton = Spielunterbruch): Spiel sofort abbrechen, Platz verlassen. Keine einzelnen Bäume, keine Schirme, keine Trolleys mit Metall.</li>
+<li>Auf Greenkeeper achten: sie haben immer Vorrang. Warten, bis sie winken.</li>
+</ul>
+<div class="warn">Sicherheit ist das einzige Kriterium, bei dem ein einziger Fehler die praktische Prüfung kosten kann.</div>`},
+
+{n:3,t:"Rücksicht im Flight",h:`
+<ul>
+<li>Während ein anderer schlägt: nicht reden, nicht bewegen, nicht mit dem Trolley rascheln.</li>
+<li>Nicht im Blickfeld und nicht im Schatten des Spielers stehen.</li>
+<li>Handy lautlos, keine Telefonate auf dem Platz.</li>
+<li>Keine Ratschläge geben oder verlangen — das ist zugleich ein Regelverstoss (2 Strafschläge). Erlaubt: Regelfragen und Distanzen zu festen Punkten.</li>
+<li>Am ersten Abschlag: kurz vorstellen und <b>Ballmarke und Nummer</b> bekanntgeben. Das ist auch regeltechnisch wichtig, damit du deinen Ball identifizieren kannst.</li>
+<li>Kein Frust-Theater: Schläger nicht werfen, nicht fluchen, Divot-Wut kostet Sympathie und Platz.</li>
+<li>Kleidung: Polo mit Kragen, lange Hose oder Bermuda, Golfschuhe ohne Metallspikes. Keine Jeans, keine Trainerhose. Kappe im Clubhaus abnehmen.</li>
+<li>Am Ende der Runde: Handschlag, Kappe ab, kurz bedanken.</li>
+</ul>`},
+
+{n:4,t:"Pace of Play",h:`
+<ul>
+<li>Massstab ist nicht die Gruppe hinter dir, sondern der <b>Anschluss an die Gruppe vor dir</b>.</li>
+<li><b>Ready Golf</b>: Wer bereit ist, spielt — sofern es sicher ist. Im Zählspiel erlaubt und erwünscht.</li>
+<li>Vorbereiten, während andere spielen: Schläger wählen, Distanz schätzen, Handschuh anziehen. Richtwert: rund 40 Sekunden ab dem Moment, in dem du dran bist.</li>
+<li>Ball suchen: maximal <b>3 Minuten</b>. Wenn der Ball verloren oder im Aus sein könnte, gleich einen <b>provisorischen Ball</b> spielen — das spart den Rückweg.</li>
+<li>Trolley oder Bag immer auf der Seite des Grüns Richtung <b>nächstem Abschlag</b> abstellen.</li>
+<li>Score nicht auf dem Grün eintragen, sondern am nächsten Abschlag.</li>
+<li>Durchspielen lassen, wenn du ein ganzes Loch Abstand nach vorne verloren hast, wenn du suchst, oder wenn eine schnellere Gruppe dicht aufläuft: mit Handzeichen einladen, seitlich in Deckung warten.</li>
+</ul>
+<div class="merk"><b>Faustregel</b>Steht das Loch vor dir leer und die Gruppe hinter dir wartet — durchlassen. Immer.</div>`},
+
+{n:5,t:"Vorrecht: wer spielt wann",h:`
+<ul>
+<li><b>Am 1. Abschlag</b>: Reihenfolge auslosen (Tee werfen) oder absprechen.</li>
+<li><b>Danach</b>: Die "Ehre" hat, wer das letzte Loch mit den wenigsten Schlägen gespielt hat. Bei Gleichstand bleibt die Reihenfolge vom Loch davor.</li>
+<li><b>Auf dem Loch</b>: Es spielt, wessen Ball am <b>weitesten vom Loch</b> entfernt ist.</li>
+<li><b>Ausnahme Ready Golf</b>: Ist es sicher und stört es niemanden, spielt der Spielbereite zuerst.</li>
+<li>Ausser der Reihe zu spielen ist im Zählspiel <b>straflos</b> — im Lochspiel darf der Gegner den Schlag annullieren lassen.</li>
+</ul>`},
+
+{n:6,t:"Schonung des Platzes",h:`
+<ul>
+<li><b>Divot</b> (herausgeschlagenes Rasenstück): zurücklegen und antreten, oder mit der Sandmischung vom Trolley auffüllen.</li>
+<li><b>Pitchmarke</b> (Einschlagloch auf dem Grün): immer reparieren — die eigene und gleich noch eine zweite. Technik: Gabel schräg am <b>Rand</b> einstechen, den Rasen <b>zur Mitte schieben</b>, nicht hebeln, danach mit der Puttersohle glätten.</li>
+<li><b>Bunker</b>: an der flachsten Stelle nahe beim Ball hinein und hinaus, danach alle Spuren harken. Harke wie clubüblich ablegen, meist ausserhalb des Bunkers parallel zur Spielrichtung.</li>
+<li>Nicht in die Puttlinie der Mitspieler treten, nicht mit den Schuhen auf dem Grün drehen.</li>
+<li>Trolley und Bag nie aufs Grün, nie zwischen Grün und Bunker durch.</li>
+<li>Fahnenstock nie werfen, sondern sanft ablegen. Ball nicht mit dem Putter aus dem Loch hebeln.</li>
+<li>Probeschwünge auf dem Abschlag und im Rough, nicht auf den kurz gemähten Vorgrüns.</li>
+</ul>`},
+
+{n:7,t:"Der Platz: Bereiche und Markierungen",h:`
+<h4>Die 5 Bereiche des Platzes</h4>
+<ol style="padding-left:19px;margin:0 0 11px">
+<li>Abschlagsfläche (Tee) des Lochs, das du spielst</li>
+<li>Gelände ("General Area" — alles dazwischen: Fairway, Rough, Bäume)</li>
+<li>Bunker</li>
+<li>Penalty Areas (Wasser und markierte Zonen)</li>
+<li>Grün des Lochs, das du spielst</li>
+</ol>
+<h4>Pfähle und Linien</h4>
+<table>
+<tr><th>Farbe</th><th>Bedeutung</th><th>Folge</th></tr>
+<tr><td>Weiss</td><td>Aus (Out of Bounds)</td><td>Schlag- und Distanzverlust, 1 Strafschlag</td></tr>
+<tr><td>Gelb</td><td>Penalty Area, frontal</td><td>2 Erleichterungsoptionen, 1 Strafschlag</td></tr>
+<tr><td>Rot</td><td>Penalty Area, seitlich</td><td>3 Optionen, 1 Strafschlag</td></tr>
+<tr><td>Blau</td><td>Boden in Ausbesserung</td><td>Straflose Erleichterung</td></tr>
+</table>
+<p class="mini">Pfähle für Aus und Penalty Areas gehören zum Platz und dürfen nicht entfernt werden. Blaue Pfähle und Distanzpfähle sind meist bewegliche Hemmnisse und dürfen weg.</p>
+<h4>Par, Birdie, Bogey</h4>
+<p><b>Par</b> ist die Sollschlagzahl eines Lochs, inklusive zwei Putts. Par 3 bis Par 5, ein 18-Loch-Platz hat meist Par 70 bis 72.</p>
+<table>
+<tr><th>Begriff</th><th>Schläge</th></tr>
+<tr><td>Eagle</td><td>2 unter Par</td></tr>
+<tr><td>Birdie</td><td>1 unter Par</td></tr>
+<tr><td>Par</td><td>genau Par</td></tr>
+<tr><td>Bogey</td><td>1 über Par</td></tr>
+<tr><td>Doppelbogey</td><td>2 über Par</td></tr>
+</table>
+<div class="merk"><b>Eselsbrücke</b>Vogel-Logik: Birdie (kleiner Vogel) = 1 unter, Eagle (grosser Vogel) = 2 unter, Albatros = 3 unter. Je grösser der Vogel, desto besser.</div>`},
+
+{n:8,t:"Ausrüstung und Schläger",h:`
+<ul>
+<li><b>Maximal 14 Schläger</b> im Bag. Strafe im Zählspiel: 2 Schläge pro Loch, maximal 4 Schläge total.</li>
+<li>Ein während der Runde beschädigter Schläger darf weiterverwendet oder repariert werden.</li>
+<li><b>Entfernungsmesser</b> sind erlaubt, solange sie nur die Distanz messen und keine Platzregel es verbietet. Gefälle-, Wind- oder Schlägerempfehlung: verboten.</li>
+<li>Ball darf während eines Lochs nur gewechselt werden, wenn eine Regel es erlaubt (z. B. beschädigt, oder neuer Ball nach Schlag- und Distanzverlust).</li>
+</ul>
+<h4>Schlägertypen</h4>
+<table>
+<tr><th>Schläger</th><th>Wofür</th></tr>
+<tr><td>Driver (1-Holz)</td><td>Weiteste Abschläge vom Tee</td></tr>
+<tr><td>Hölzer 3 / 5, Hybrid</td><td>Lange Schläge vom Fairway</td></tr>
+<tr><td>Eisen 5 bis 9</td><td>Annäherung, je höher die Zahl, desto kürzer und höher</td></tr>
+<tr><td>Pitching Wedge</td><td>Kurze hohe Annäherung (Pitch)</td></tr>
+<tr><td>Sand Wedge</td><td>Bunker und ganz kurze Schläge</td></tr>
+<tr><td>Putter</td><td>Rollen auf dem Grün</td></tr>
+</table>
+<div class="merk"><b>Faustregel</b>Grosse Zahl = kurzer, hoher Ball. Kleine Zahl = langer, flacher Ball.</div>`},
+
+{n:9,t:"Abschlag und Ball spielen wie er liegt",h:`
+<h4>Abschlagsfläche</h4>
+<ul>
+<li>Der Ball muss <b>zwischen den Markierungen</b> und höchstens <b>zwei Schlägerlängen dahinter</b> aufgeteet sein. Du selbst darfst ausserhalb stehen.</li>
+<li>Fällt der Ball vor dem Schlag vom Tee: straflos neu aufteen.</li>
+<li>Schlägst du <b>daneben und triffst nichts</b> (Luftschlag mit Schwungabsicht): das zählt als Schlag. Der Ball liegt jetzt im Spiel und darf nicht neu aufgeteet werden, ausser er ist noch in der Abschlagsfläche.</li>
+<li>Vom falschen Ort abgeschlagen: 2 Strafschläge, Schlag korrekt wiederholen.</li>
+</ul>
+<h4>Grundprinzip</h4>
+<p><b>Spiele den Platz, wie du ihn vorfindest, und den Ball, wie er liegt.</b> Du darfst deine Lage, deinen Stand oder deine Schwungbahn nicht verbessern: keine Äste wegbiegen, kein Gras plattdrücken, keine Sandhügel wegwischen. Strafe: 2 Schläge.</p>
+<ul>
+<li>Erlaubt: <b>lose hinderliche Naturstoffe</b> (Steine, Blätter, Äste, Tannzapfen) überall entfernen — auch im Bunker und in der Penalty Area. Bewegt sich dabei dein Ball (ausserhalb des Grüns): 1 Strafschlag und zurücklegen.</li>
+<li>Erlaubt: <b>bewegliche Hemmnisse</b> (Harke, Dose, Schild, Trolley) überall straflos entfernen. Bewegt sich der Ball dabei: straflos zurücklegen.</li>
+<li>Zur <b>Identifizierung</b> darfst du den Ball aufnehmen: vorher ankündigen, Lage markieren, nur so viel reinigen wie nötig, zurücklegen.</li>
+</ul>`},
+
+{n:10,t:"Ball verloren, im Aus, provisorisch",h:`
+<ul>
+<li><b>Suchzeit: 3 Minuten</b> ab dem Moment, in dem du mit Suchen beginnst. Danach ist der Ball verloren.</li>
+<li><b>Verloren oder im Aus</b>: Schlag- und Distanzverlust. 1 Strafschlag, und du spielst nochmals <b>vom Ort des letzten Schlags</b>. Ein Abschlag darf wieder aufgeteet werden.</li>
+<li>Der Ball ist erst im Aus, wenn er <b>vollständig</b> ausserhalb der Grenze liegt. Die Grenzlinie verläuft an der Innenkante der weissen Pfähle auf Bodenhöhe.</li>
+<li><b>Provisorischer Ball</b>: Wenn dein Ball verloren oder im Aus sein könnte, spielst du einen zweiten Ball vom selben Ort. Du musst <b>vorher ankündigen</b>, dass es ein provisorischer Ball ist — ohne Ankündigung ist er sofort dein Ball im Spiel.</li>
+<li>Der provisorische Ball wird zum Ball im Spiel, sobald der Originalball verloren oder im Aus ist, oder sobald du den provisorischen von einer Stelle <b>näher am Loch</b> als der vermutete Originalort spielst.</li>
+<li>Findest du den Originalball innerhalb der 3 Minuten im Platz, musst du ihn spielen — der provisorische Ball wird aufgenommen, straflos.</li>
+</ul>
+<div class="merk"><b>Wortlaut merken</b>"Ich spiele einen provisorischen Ball." Ohne diese Ansage kostet dich derselbe Schlag zusätzliche Strafschläge.</div>`},
+
+{n:11,t:"Erleichterung und Droppen",h:`
+<h4>So wird gedroppt</h4>
+<ol style="padding-left:19px;margin:0 0 11px">
+<li>Bezugspunkt bestimmen (je nach Regel).</li>
+<li>Erleichterungsbereich abmessen: 1 oder 2 Schlägerlängen, <b>nie näher zum Loch</b>.</li>
+<li>Ball aus <b>Kniehöhe</b> fallen lassen, ohne zu werfen oder zu drehen.</li>
+<li>Der Ball muss im Erleichterungsbereich <b>zu liegen kommen</b>. Rollt er heraus: nochmals droppen. Beim zweiten Mal wieder heraus: an der Stelle <b>hinlegen</b>, wo er beim zweiten Droppen zuerst den Boden berührt hat.</li>
+</ol>
+<h4>Straflose Erleichterung: ungewöhnliche Platzverhältnisse</h4>
+<p>Bei <b>zeitweiligem Wasser</b>, <b>Boden in Ausbesserung</b> (blau), <b>Tierlöchern</b> und <b>unbeweglichen Hemmnissen</b> (Weg, Sprinkler, Gebäude, Bank) darfst du straflos Erleichterung nehmen:</p>
+<ul>
+<li>Nächstgelegener Punkt <b>vollständiger</b> Erleichterung suchen (Ballage, Stand und Schwung frei), nicht näher zum Loch.</li>
+<li>Von dort <b>1 Schlägerlänge</b> Erleichterungsbereich, im selben Bereich des Platzes, dann droppen.</li>
+<li>Auf dem Grün wird der Ball stattdessen an die nächstgelegene Stelle <b>hingelegt</b>.</li>
+</ul>
+<p><b>Eingebetteter Ball</b> im Gelände (Ball steckt im eigenen Einschlagloch im Boden): straflose Erleichterung, 1 Schlägerlänge hinter der Stelle.</p>
+<div class="warn">Kein Anspruch auf Erleichterung besteht für: Bäume, Büsche, Zäune an der Platzgrenze, schlechte Lage im Rough und Divotlöcher im Fairway.</div>`},
+
+{n:12,t:"Penalty Areas und unspielbarer Ball",h:`
+<h4>Penalty Area</h4>
+<p>Du darfst den Ball dort ganz normal <b>straflos spielen</b> und den Schläger auch aufsetzen. Willst du nicht spielen, kostet jede Erleichterung <b>1 Strafschlag</b>:</p>
+<table>
+<tr><th>Option</th><th>Gelb</th><th>Rot</th></tr>
+<tr><td>Schlag- und Distanzverlust (nochmals vom letzten Ort)</td><td>ja</td><td>ja</td></tr>
+<tr><td>Auf der Linie Loch–Kreuzungspunkt beliebig weit zurück droppen</td><td>ja</td><td>ja</td></tr>
+<tr><td>2 Schlägerlängen seitlich vom Kreuzungspunkt, nicht näher zum Loch</td><td>nein</td><td>ja</td></tr>
+</table>
+<div class="merk"><b>Merke</b>Gelb = 2 Optionen. Rot = 3 Optionen. Rot hat die seitliche Extra-Option, weil man dort sonst oft gar nicht weiterkäme.</div>
+<h4>Unspielbarer Ball (Regel 19)</h4>
+<p>Du allein entscheidest, ob dein Ball unspielbar ist — überall ausser in einer Penalty Area. Immer <b>1 Strafschlag</b>, drei Optionen:</p>
+<ul>
+<li>Nochmals vom Ort des letzten Schlags (Schlag- und Distanzverlust).</li>
+<li>Auf der Linie Loch–Ball beliebig weit nach hinten droppen.</li>
+<li>2 Schlägerlängen seitlich, nicht näher zum Loch.</li>
+</ul>
+<p><b>Im Bunker</b>: Die gleichen drei Optionen, aber der Ball muss im Bunker bleiben. Für <b>2 Strafschläge</b> darfst du stattdessen auf der Linie nach hinten <b>ausserhalb</b> des Bunkers droppen.</p>`},
+
+{n:13,t:"Bunker",h:`
+<h4>Verboten (2 Strafschläge)</h4>
+<ul>
+<li>Sand direkt vor oder hinter dem Ball mit Hand oder Schläger berühren.</li>
+<li>Schläger im Sand aufsetzen (weder vor noch hinter dem Ball).</li>
+<li>Probeschwung, der den Sand berührt.</li>
+<li>Sand testen, um die Beschaffenheit zu prüfen.</li>
+</ul>
+<h4>Erlaubt</h4>
+<ul>
+<li>Lose Naturstoffe (Blätter, Steine) und bewegliche Hemmnisse (Harke) entfernen.</li>
+<li>Füsse eingraben, um Stand zu finden.</li>
+<li>Sand beim Gehen, Hinfallen oder beim Ablegen von Schlägern berühren.</li>
+<li>Nach dem Schlag den Bunker glattharken.</li>
+</ul>
+<div class="merk"><b>Denkregel</b>Alles, was dir <em>Information über den Sand</em> oder eine <em>bessere Lage</em> verschafft, ist verboten. Alles andere ist erlaubt.</div>
+<p>Bleibt der Ball nach dem Schlag im Bunker liegen: erst harken, wenn du fertig bist — aber nie so, dass du die Lage deines Balls verbesserst.</p>`},
+
+{n:14,t:"Das Grün",h:`
+<ul>
+<li><b>Markieren</b>: Marker dicht hinter den Ball legen, dann aufnehmen. Reihenfolge: markieren, aufnehmen, reinigen, zurücklegen. Ohne Markieren aufnehmen = 1 Strafschlag.</li>
+<li><b>Ausbessern erlaubt</b>: Pitchmarken, Spikemarken, Tier- und Gerätespuren, alte Lochstopfen. Nicht ausbessern darfst du natürliche Unebenheiten oder Aerifizierungslöcher.</li>
+<li><b>Loser Sand und Erde</b> dürfen nur auf dem Grün entfernt werden, sonst nirgends.</li>
+<li><b>Fahnenstock</b>: Du darfst ihn stecken lassen, herausnehmen oder bedienen lassen. Trifft dein Putt die steckende Fahne: <b>straflos</b>.</li>
+<li>Bewegt sich dein Ball auf dem Grün <b>versehentlich</b> (Schläger, Fuss, Windstoss nach dem Zurücklegen): straflos an die ursprüngliche Stelle zurücklegen.</li>
+<li>Dein Putt trifft einen anderen Ball, der auf dem Grün lag: <b>2 Strafschläge</b> im Zählspiel. Darum: Mitspielerbälle vorher markieren lassen.</li>
+<li>Ball hängt am Lochrand: du darfst <b>10 Sekunden</b> warten (plus die Zeit zum Hingehen). Fällt er danach hinein, zählt ein zusätzlicher Schlag.</li>
+<li>Die Puttlinie darf nicht berührt werden, um sie zu verbessern. Auf der Linie zu zeigen ist erlaubt, aber nichts dort hinlegen oder markieren.</li>
+</ul>`},
+
+{n:15,t:"Scorekarte, Zählweise, Handicap",h:`
+<h4>Zählspiel und Lochspiel</h4>
+<p><b>Zählspiel</b>: alle Schläge der Runde werden addiert, wer am wenigsten braucht, gewinnt. <b>Lochspiel</b>: jedes Loch wird einzeln gewonnen oder verloren, es zählt der Lochstand.</p>
+<h4>Scorekarte</h4>
+<ul>
+<li>Du schreibst nicht deine eigene Karte, sondern die deines Mitspielers — er ist dein <b>Zähler (Marker)</b>, du seiner.</li>
+<li>Nach der Runde: Karte prüfen, Spieler <b>und</b> Zähler unterschreiben.</li>
+<li>Zu <b>tiefe</b> Zahl eingetragen und abgegeben: Disqualifikation. Zu <b>hohe</b> Zahl: sie bleibt stehen.</li>
+<li>Für die Endsumme ist der Spieler verantwortlich, für die Lochergebnisse der Zähler.</li>
+</ul>
+<h4>Stableford</h4>
+<p>Punkte statt Schläge, gerechnet gegen das Netto-Par des Lochs:</p>
+<table>
+<tr><th>Ergebnis</th><th>Punkte</th></tr>
+<tr><td>Eagle (2 unter Par)</td><td>4</td></tr>
+<tr><td>Birdie (1 unter)</td><td>3</td></tr>
+<tr><td>Par</td><td>2</td></tr>
+<tr><td>Bogey (1 über)</td><td>1</td></tr>
+<tr><td>Doppelbogey oder schlechter</td><td>0</td></tr>
+</table>
+<p>Sobald du auf einem Loch keine Punkte mehr erreichen kannst: <b>Ball aufnehmen</b> und weitergehen. Das ist gutes Spieltempo, kein Aufgeben.</p>
+<div class="merk"><b>Zahl, die du kennen musst</b>36 Stableford-Punkte über 18 Loch (oder 18 über 9 Loch) — das ist das Resultat, mit dem du dein erstes Handicap bekommst. Die Startvorgabe beträgt 54 oder besser.</div>`},
+
+{n:16,t:"Strafschläge auf einen Blick",h:`
+<table>
+<tr><th>Situation</th><th>Strafe</th></tr>
+<tr><td>Ball verloren oder im Aus</td><td>1 + zurück zum letzten Ort</td></tr>
+<tr><td>Ball unspielbar</td><td>1</td></tr>
+<tr><td>Erleichterung aus Penalty Area</td><td>1</td></tr>
+<tr><td>Ball versehentlich bewegt (ausserhalb Grün)</td><td>1</td></tr>
+<tr><td>Ball ohne Markieren aufgenommen</td><td>1</td></tr>
+<tr><td>Falschen Ball gespielt</td><td>2</td></tr>
+<tr><td>Sand im Bunker berührt / Schläger aufgesetzt</td><td>2</td></tr>
+<tr><td>Lage oder Schwungbahn verbessert</td><td>2</td></tr>
+<tr><td>Rat gegeben oder verlangt</td><td>2</td></tr>
+<tr><td>Vom falschen Ort gespielt</td><td>2</td></tr>
+<tr><td>Putt trifft anderen Ball auf dem Grün</td><td>2</td></tr>
+<tr><td>Mehr als 14 Schläger</td><td>2 pro Loch, max. 4</td></tr>
+<tr><td>Scorekarte zu tief eingetragen</td><td>Disqualifikation</td></tr>
+</table>
+<div class="merk"><b>Systematik</b><b style="font-size:15px;color:#10231A">1 Schlag = du kaufst dir Erleichterung. 2 Schläge = du hast gegen eine Regel verstossen.</b>Wenn du bei einer Prüfungsfrage unsicher bist, entscheide danach: Hilfe für dich selbst kostet 1, echter Verstoss kostet 2.</div>`},
+
+{n:17,t:"Ablauf Platzreife Schweiz",h:`
+<p>Der Regel- und Etikettenkurs ist Teil A auf dem Weg zur Platzreife (PR). Ziel laut Swiss Golf: du spielst zügig, bewegst dich sicher auf dem Platz, gefährdest niemanden und kennst die Grundregeln.</p>
+<h4>A — Theorie</h4>
+<p><b>40 Fragen</b> zu Etikette und Regeln, abgenommen von einer vom Club bestimmten Person. Bestanden mit <b>mindestens 28 richtigen Antworten</b> (70 %). Gefragt sind Standardsituationen, keine Sonderfälle.</p>
+<h4>B — Übungsanlage (Swiss PGA Pro)</h4>
+<table>
+<tr><th>Prüfung</th><th>Ziel</th></tr>
+<tr><td>Abschläge, 6 Bälle</td><td>3 von 6 im Flug über 80 m (Frauen 70 m)</td></tr>
+<tr><td>Langes Spiel, 6 Bälle</td><td>3 von 6 im Flug über 60 m</td></tr>
+<tr><td>Pitchen, 15–18 m</td><td>2 von 6 in einen Kreis mit Radius 6 m</td></tr>
+<tr><td>Chippen, 10–12 m</td><td>2 von 6 in einen Kreis mit Radius 4 m</td></tr>
+<tr><td>Bunker, 6 Bälle</td><td>2 von 6 bleiben auf dem Grün liegen</td></tr>
+<tr><td>Putten, 9 Loch (3×3 m, 3×6 m, 3×9 m)</td><td>maximal 21 Schläge</td></tr>
+</table>
+<h4>C — Spiel auf dem Platz</h4>
+<p>Bewertet werden Etikette (Sicherheit, Rücksicht, Pace of Play, Vorrecht, Schonung), das Spiel selbst und das korrekte <b>Ausfüllen der Scorekarte inklusive Umrechnung in Stableford-Punkte</b>.</p>
+<p class="mini">Wurde die Prüfung über 9 oder 18 Loch auf einem homologierten Platz gespielt, kann die unterschriebene Scorekarte als erstes Handicap-Resultat eingereicht werden. Dafür brauchst du eine Swiss Golf Lizenz über einen Club, ASGI oder Migros Golfcard. Einzelne Clubs setzen zusätzliche Bedingungen.</p>`},
+
+{n:18,t:"Glossar",h:`
+<table>
+<tr><td><b>Ace</b></td><td>Hole-in-one</td></tr>
+<tr><td><b>Approach</b></td><td>Annäherungsschlag Richtung Grün</td></tr>
+<tr><td><b>Away</b></td><td>Der Ball, der am weitesten vom Loch liegt — er ist dran</td></tr>
+<tr><td><b>Chip</b></td><td>Kurzer, flacher Schlag mit viel Roll ums Grün</td></tr>
+<tr><td><b>Divot</b></td><td>Herausgeschlagenes Rasenstück</td></tr>
+<tr><td><b>Dogleg</b></td><td>Loch mit Knick nach links oder rechts</td></tr>
+<tr><td><b>Draw / Fade</b></td><td>Kontrollierte Kurve nach links / rechts</td></tr>
+<tr><td><b>Drop</b></td><td>Ball aus Kniehöhe fallen lassen</td></tr>
+<tr><td><b>Fairway</b></td><td>Kurz gemähte Spielbahn zwischen Tee und Grün</td></tr>
+<tr><td><b>Flight</b></td><td>Spielgruppe</td></tr>
+<tr><td><b>Fore</b></td><td>Warnruf</td></tr>
+<tr><td><b>Green in Regulation</b></td><td>Grün mit zwei Schlägen unter Par erreicht</td></tr>
+<tr><td><b>Handicap</b></td><td>Spielstärke-Kennzahl, Start bei 54</td></tr>
+<tr><td><b>Hook / Slice</b></td><td>Unkontrollierte Kurve nach links / rechts</td></tr>
+<tr><td><b>Lie</b></td><td>Lage des Balls</td></tr>
+<tr><td><b>Loft</b></td><td>Neigung der Schlagfläche</td></tr>
+<tr><td><b>Marker</b></td><td>Zähler, der deine Karte schreibt</td></tr>
+<tr><td><b>Mulligan</b></td><td>Straflos wiederholter Schlag — nur zum Spass, nie im Wettspiel</td></tr>
+<tr><td><b>Pin / Pin Position</b></td><td>Fahnenstock, Position des Lochs auf dem Grün</td></tr>
+<tr><td><b>Pitch</b></td><td>Kurzer hoher Schlag mit wenig Roll</td></tr>
+<tr><td><b>Pitchmarke</b></td><td>Einschlagloch auf dem Grün</td></tr>
+<tr><td><b>Provisorischer Ball</b></td><td>Ersatzball bei möglichem Verlust oder Aus</td></tr>
+<tr><td><b>Ready Golf</b></td><td>Spielbereit spielen statt strikt nach Reihenfolge</td></tr>
+<tr><td><b>Rough</b></td><td>Hoch gewachsener Bereich neben dem Fairway</td></tr>
+<tr><td><b>Scramble / Texas Scramble</b></td><td>Teamspielform mit gemeinsamem bestem Ball</td></tr>
+<tr><td><b>Stableford</b></td><td>Punktezählweise gegen Netto-Par</td></tr>
+<tr><td><b>Tee</b></td><td>Abschlagsfläche und Ballstift</td></tr>
+<tr><td><b>Vorgrün (Apron)</b></td><td>Kurz gemähter Kragen ums Grün</td></tr>
+</table>`}
+];
+
+const PLAN = [
+{d:1,th:"Etikette",fokus:"Die 5 Kriterien plus Sicherheit",tasks:[
+"Kapitel 1 bis 3 lesen (ca. 15 Min.)",
+"Merksatz S-R-P-V-S laut aufsagen, bis er ohne Hinschauen sitzt",
+"Karteikarten: erste 15 Karten durchgehen",
+"Themenquiz Etikette spielen"]},
+{d:2,th:"Platz",fokus:"Tempo, Vorrecht, Schonung, Markierungen",tasks:[
+"Kapitel 4 bis 7 lesen",
+"Pfahlfarben aufschreiben, ohne nachzuschauen: weiss, gelb, rot, blau",
+"Karteikarten wiederholen (alle fälligen)",
+"Themenquiz Platz und Etikette"]},
+{d:3,th:"Regeln I",fokus:"Abschlag, Ball wie er liegt, verloren, Aus",fokus2:"",tasks:[
+"Kapitel 8 bis 10 lesen",
+"Den Ablauf provisorischer Ball einem Menschen laut erklären",
+"Karteikarten wiederholen",
+"Themenquiz Regeln"]},
+{d:4,th:"Regeln II",fokus:"Erleichterung, Droppen, Penalty Areas, unspielbar",tasks:[
+"Kapitel 11 und 12 lesen",
+"Die 2- und 3-Optionen-Tabelle aus dem Kopf auf ein Blatt zeichnen",
+"Karteikarten wiederholen",
+"Themenquiz Erleichterung"]},
+{d:5,th:"Bunker & Grün",fokus:"Die beiden Orte mit den meisten Prüfungsfragen",tasks:[
+"Kapitel 13 und 14 lesen",
+"Bunker: verboten-vs-erlaubt-Liste aus dem Kopf aufschreiben",
+"Karteikarten wiederholen",
+"Themenquiz Bunker und Grün"]},
+{d:6,th:"Zählen",fokus:"Scorekarte, Stableford, Strafschläge",tasks:[
+"Kapitel 15 und 16 lesen",
+"Eine fiktive 9-Loch-Runde in Stableford-Punkte umrechnen",
+"Alle Karteikarten der Boxen 1 und 2 leeren",
+"Themenquiz Zählweise"]},
+{d:7,th:"Prüfung",fokus:"Alles wiederholen und simulieren",tasks:[
+"Prüfungssimulation mit 40 Fragen — Ziel: mindestens 32 richtig",
+"Alle falsch beantworteten Fragen nachlesen",
+"Zweite Prüfungssimulation am Abend",
+"Kapitel 17 lesen: Ablauf am Kurstag"]}
+];
+
+const FC = [
+["etikette","Die 5 Etikette-Kriterien von Swiss Golf?","Sicherheit, Rücksicht, Pace of Play, Vorrecht, Schonung. (Sehr ruhige Profis vermeiden Schäden.)"],
+["etikette","Was rufst du, wenn dein Ball Richtung Personen fliegt?","Laut und sofort: Fore!"],
+["etikette","Du hörst Fore — was tust du?","Ducken, Kopf und Nacken mit den Armen schützen, wegdrehen. Nicht schauen, woher der Ball kommt."],
+["etikette","Wann darfst du abschlagen?","Erst wenn die Gruppe vor dir ausser Reichweite ist."],
+["etikette","Wo stehst du, während ein Mitspieler schlägt?","Ruhig und still, schräg hinter dem Spieler, nicht im Blickfeld, nicht im Schatten, nie in der Verlängerung der Schlagrichtung."],
+["etikette","Was bedeutet ein langer Sirenenton?","Spielunterbruch, meist Gewitter: Spiel sofort abbrechen und den Platz verlassen."],
+["etikette","Darfst du deinem Mitspieler sagen, welchen Schläger er nehmen soll?","Nein. Rat geben oder verlangen kostet 2 Strafschläge. Regelfragen und Distanzen zu festen Punkten sind erlaubt."],
+["etikette","Was gibst du am ersten Abschlag bekannt?","Marke und Nummer deines Balls, damit du ihn eindeutig identifizieren kannst."],
+["tempo","Wie lange darfst du einen Ball suchen?","Maximal 3 Minuten."],
+["tempo","Was ist Ready Golf?","Wer bereit ist, spielt — sofern es sicher ist. Im Zählspiel erlaubt und erwünscht."],
+["tempo","Woran misst du dein Spieltempo?","Am Anschluss zur Gruppe vor dir, nicht an der Gruppe hinter dir."],
+["tempo","Wo stellst du Trolley oder Bag beim Grün ab?","Nie auf dem Grün, nie zwischen Grün und Bunker — auf der Seite Richtung nächstem Abschlag."],
+["tempo","Wo trägst du deinen Score ein?","Am nächsten Abschlag, nicht auf dem Grün."],
+["tempo","Wann lässt du durchspielen?","Wenn du ein Loch Abstand verloren hast, wenn du suchst, oder wenn eine schnellere Gruppe wartet."],
+["vorrecht","Wer hat nach dem ersten Loch die Ehre am Abschlag?","Wer das letzte Loch mit den wenigsten Schlägen gespielt hat."],
+["vorrecht","Wer spielt auf dem Loch zuerst?","Wessen Ball am weitesten vom Loch entfernt liegt — ausser bei Ready Golf."],
+["vorrecht","Strafe für Spielen ausser der Reihe im Zählspiel?","Keine."],
+["schonung","Wie reparierst du eine Pitchmarke?","Gabel schräg am Rand einstechen, Rasen zur Mitte schieben, nicht hebeln, mit der Puttersohle glätten."],
+["schonung","Was machst du mit einem Divot?","Zurücklegen und antreten oder mit Sandmischung auffüllen."],
+["schonung","Wie verlässt du einen Bunker?","An der flachsten Stelle nahe beim Ball, danach alle Spuren glattharken."],
+["platz","Weisse Pfähle bedeuten?","Aus (Out of Bounds)."],
+["platz","Gelbe Pfähle bedeuten?","Penalty Area, frontal — 2 Erleichterungsoptionen."],
+["platz","Rote Pfähle bedeuten?","Seitliche Penalty Area — 3 Erleichterungsoptionen."],
+["platz","Blaue Pfähle bedeuten?","Boden in Ausbesserung — straflose Erleichterung."],
+["platz","Die 5 Bereiche des Platzes?","Abschlagsfläche, Gelände, Bunker, Penalty Areas, Grün."],
+["platz","Wann ist ein Ball im Aus?","Wenn er vollständig ausserhalb der Grenze liegt."],
+["platz","Birdie, Eagle, Bogey?","Birdie 1 unter Par, Eagle 2 unter Par, Bogey 1 über Par."],
+["ausruestung","Wie viele Schläger darfst du dabeihaben?","Maximal 14."],
+["ausruestung","Strafe für zu viele Schläger im Zählspiel?","2 Schläge pro Loch, maximal 4 Schläge."],
+["ausruestung","Sind Entfernungsmesser erlaubt?","Ja, für die reine Distanz — sofern keine Platzregel es verbietet. Gefälle- oder Windfunktion ist verboten."],
+["regeln","Grundprinzip des Golfspiels?","Spiele den Platz, wie du ihn vorfindest, und den Ball, wie er liegt."],
+["regeln","Wo muss der Ball beim Abschlag liegen?","Zwischen den Markierungen und höchstens 2 Schlägerlängen dahinter. Du selbst darfst ausserhalb stehen."],
+["regeln","Der Ball fällt vor dem Schlag vom Tee — was gilt?","Straflos neu aufteen."],
+["regeln","Du schwingst und triffst den Ball nicht. Zählt das?","Ja, ein Luftschlag mit Schwungabsicht zählt als Schlag."],
+["regeln","Ball verloren oder im Aus — was tust du?","1 Strafschlag, nochmals vom Ort des letzten Schlags spielen (Schlag- und Distanzverlust)."],
+["regeln","Wann spielst du einen provisorischen Ball?","Wenn dein Ball verloren oder im Aus sein könnte — und du sagst vorher an, dass es ein provisorischer Ball ist."],
+["regeln","Was passiert, wenn du den provisorischen Ball nicht ankündigst?","Er wird sofort dein Ball im Spiel, mit Schlag- und Distanzverlust."],
+["regeln","Du findest den Originalball nach 2 Minuten im Platz. Was gilt?","Du musst ihn spielen, der provisorische Ball wird straflos aufgenommen."],
+["regeln","Darfst du lose Naturstoffe wie Blätter entfernen?","Ja, überall — auch im Bunker und in der Penalty Area."],
+["regeln","Ball bewegt sich, während du lose Naturstoffe entfernst (nicht auf dem Grün)?","1 Strafschlag und Ball zurücklegen."],
+["regeln","Eine Harke liegt an deinem Ball. Was darfst du?","Sie ist ein bewegliches Hemmnis: straflos entfernen. Bewegt sich der Ball dabei, straflos zurücklegen."],
+["regeln","Du willst prüfen, ob es dein Ball ist. Wie gehst du vor?","Ankündigen, Lage markieren, aufnehmen, nur so viel reinigen wie nötig, zurücklegen."],
+["regeln","Strafe für einen gespielten falschen Ball?","2 Strafschläge, dann mit dem richtigen Ball weiterspielen."],
+["erleichterung","Aus welcher Höhe wird gedroppt?","Aus Kniehöhe."],
+["erleichterung","Der gedroppte Ball rollt aus dem Erleichterungsbereich. Was nun?","Nochmals droppen. Rollt er wieder heraus, an die Stelle hinlegen, wo er beim zweiten Droppen zuerst den Boden berührte."],
+["erleichterung","Straflose Erleichterung gibt es wofür?","Zeitweiliges Wasser, Boden in Ausbesserung, Tierlöcher, unbewegliche Hemmnisse wie Wege und Sprinkler, eingebetteter Ball."],
+["erleichterung","Wie gross ist der Erleichterungsbereich bei straflosen Erleichterungen?","1 Schlägerlänge vom nächstgelegenen Punkt vollständiger Erleichterung, nicht näher zum Loch."],
+["erleichterung","Gibt es Erleichterung von einem Baum oder einer schlechten Lage im Rough?","Nein."],
+["erleichterung","Gelbe Penalty Area: welche Optionen?","2 Optionen mit je 1 Strafschlag: Schlag- und Distanzverlust oder auf der Linie zurück droppen."],
+["erleichterung","Rote Penalty Area: welche Optionen?","Die zwei der gelben plus 2 Schlägerlängen seitlich vom Kreuzungspunkt, nicht näher zum Loch. Je 1 Strafschlag."],
+["erleichterung","Darfst du einen Ball in der Penalty Area spielen?","Ja, straflos — und du darfst den Schläger aufsetzen."],
+["erleichterung","Ball unspielbar: wer entscheidet, was kostet es?","Nur du entscheidest. 1 Strafschlag, drei Optionen: letzter Ort, Linie zurück, 2 Schlägerlängen seitlich."],
+["bunker","Was ist im Bunker verboten?","Sand vor oder hinter dem Ball berühren, Schläger aufsetzen, Probeschwung im Sand, Sand testen. 2 Strafschläge."],
+["bunker","Was ist im Bunker erlaubt?","Lose Naturstoffe und Harke entfernen, Füsse eingraben, Sand beim Gehen berühren, nach dem Schlag harken."],
+["bunker","Unspielbarer Ball im Bunker — die Optionen?","Drei Optionen für 1 Strafschlag, aber im Bunker bleibend. Oder für 2 Strafschläge auf der Linie ausserhalb des Bunkers droppen."],
+["gruen","Reihenfolge beim Ballaufnehmen auf dem Grün?","Markieren, aufnehmen, reinigen, zurücklegen. Ohne Markieren: 1 Strafschlag."],
+["gruen","Was darfst du auf dem Grün ausbessern?","Pitchmarken, Spikemarken, Tier- und Gerätespuren, alte Lochstopfen. Keine natürlichen Unebenheiten."],
+["gruen","Dein Putt trifft die steckende Fahne. Strafe?","Keine."],
+["gruen","Dein Putt trifft einen anderen Ball auf dem Grün. Strafe?","2 Strafschläge im Zählspiel. Darum Mitspielerbälle markieren lassen."],
+["gruen","Der Wind bewegt deinen bereits zurückgelegten Ball auf dem Grün. Was tust du?","Straflos an die ursprüngliche Stelle zurücklegen."],
+["gruen","Der Ball hängt am Lochrand. Wie lange darfst du warten?","10 Sekunden, plus die Zeit zum Hingehen."],
+["gruen","Wo darfst du losen Sand und Erde entfernen?","Nur auf dem Grün."],
+["zaehlen","Stableford: wie viele Punkte für ein Par?","2 Punkte."],
+["zaehlen","Stableford: Punkte für Birdie, Bogey, Doppelbogey?","Birdie 3, Bogey 1, Doppelbogey 0."],
+["zaehlen","Wie viele Stableford-Punkte brauchst du fürs erste Handicap?","36 über 18 Loch oder 18 über 9 Loch."],
+["zaehlen","Wer schreibt deine Scorekarte?","Dein Zähler (Marker), also ein Mitspieler. Beide unterschreiben."],
+["zaehlen","Was passiert bei einer zu tief eingetragenen Zahl?","Disqualifikation. Eine zu hohe Zahl bleibt stehen."],
+["zaehlen","Wann nimmst du in Stableford den Ball auf?","Sobald auf dem Loch kein Punkt mehr möglich ist — das hält das Tempo hoch."],
+["zaehlen","Wie hoch ist die Startvorgabe beim ersten Handicap?","54."],
+["pruefung","Wie viele Fragen hat die Theorieprüfung und wie viele musst du richtig haben?","40 Fragen, mindestens 28 richtig."],
+["pruefung","Die drei Teile der Platzreife?","A Theorie, B Übungsanlage, C Spiel auf dem Platz."],
+["pruefung","Merkregel für die Strafhöhe?","1 Schlag, wenn du dir Erleichterung kaufst. 2 Schläge, wenn du eine Regel verletzt hast."]
+];
+
+const QZ = [
+["etikette","Dein Ball fliegt Richtung einer anderen Spielergruppe. Was tust du?",["Nichts, sie sehen ihn schon","Sofort laut Fore rufen","Winken und weiterspielen","Warten und dich entschuldigen, wenn du hinkommst"],1,"Fore ist der internationale Warnruf. Laut, sofort, ohne zu zögern."],
+["etikette","Du hörst jemanden Fore rufen. Richtiges Verhalten?",["Umschauen, woher der Ball kommt","Ducken, Kopf mit den Armen schützen, wegdrehen","Wegrennen","Den Ball beobachten und ausweichen"],1,"Wer hinschaut, riskiert einen Treffer im Gesicht. Klein machen und Kopf schützen."],
+["etikette","Welche fünf Punkte prüft Swiss Golf bei der Etikette?",["Kleidung, Handicap, Ausrüstung, Tempo, Regeln","Sicherheit, Rücksicht, Pace of Play, Vorrecht, Schonung","Pünktlichkeit, Sicherheit, Fairness, Tempo, Kleidung","Sicherheit, Fairness, Ehrlichkeit, Tempo, Technik"],1,"Sehr ruhige Profis vermeiden Schäden: Sicherheit, Rücksicht, Pace of Play, Vorrecht, Schonung."],
+["etikette","Ein Mitspieler fragt dich, ob er das Eisen 7 oder 8 nehmen soll. Du antwortest?",["Mit deiner Empfehlung","Gar nicht, das wäre unerlaubter Rat","Nur wenn er dich zuerst fragt","Nur im Zählspiel"],1,"Rat geben oder verlangen kostet 2 Strafschläge. Erlaubt sind Regelfragen und Distanzen zu festen Punkten."],
+["etikette","Wo stehst du, während ein Mitspieler abschlägt?",["Direkt hinter ihm in der Schlagrichtung","Neben ihm, damit du den Ball siehst","Ruhig und still, schräg hinter ihm, ausserhalb seines Blickfelds","Vor ihm, seitlich am Fairwayrand"],2,"Nie in der Verlängerung der Schlagrichtung, nie im Blickfeld oder Schatten."],
+["etikette","Ein langer Sirenenton ertönt. Was bedeutet das?",["Startfreigabe","Spielunterbruch, Platz sofort verlassen","Mittagspause","Turnierbeginn"],1,"Meist Gewitterwarnung. Spiel abbrechen, keine Bäume, keine Schirme."],
+["etikette","Welche Kleidung ist auf dem Platz üblich?",["Jeans und Turnschuhe","Polo mit Kragen, Golfschuhe ohne Metallspikes","Trainerhose und Kappe","Egal, Hauptsache bequem"],1,"Kragenshirt, keine Jeans, Golfschuhe. Kappe im Clubhaus abnehmen."],
+["tempo","Wie lange darfst du nach deinem Ball suchen?",["1 Minute","3 Minuten","5 Minuten","So lange du willst, wenn niemand hinter dir ist"],1,"Seit 2019 gelten 3 Minuten ab Beginn der Suche."],
+["tempo","Was bedeutet Ready Golf?",["Der beste Spieler beginnt","Wer bereit ist, spielt — wenn es sicher ist","Man spielt ohne Probeschwung","Man verzichtet auf die Scorekarte"],1,"Ready Golf ist im Zählspiel erlaubt und ausdrücklich erwünscht."],
+["tempo","Wo stellst du deinen Trolley beim Grün ab?",["Am Rand des Grüns, wo du hochkommst","Zwischen Grün und Bunker","Auf der Seite Richtung nächstem Abschlag","Auf dem Vorgrün"],2,"So verlierst du keine Zeit und schonst das Grün. Nie zwischen Grün und Bunker."],
+["tempo","Wann solltest du eine Gruppe durchspielen lassen?",["Nie, das ist unhöflich","Wenn du ein Loch Abstand verloren hast oder suchst","Nur auf Verlangen des Marshalls","Nur bei 3er-Flights"],1,"Ein leeres Loch vor dir und Wartende hinter dir heisst: durchlassen."],
+["tempo","Wo trägst du deine Schläge in die Scorekarte ein?",["Direkt auf dem Grün","Am nächsten Abschlag","Nach neun Löchern","Erst am Ende der Runde"],1,"Auf dem Grün blockierst du die nachfolgende Gruppe."],
+["vorrecht","Wer hat auf dem zweiten Abschlag die Ehre?",["Der mit dem niedrigsten Handicap","Der Spieler mit dem besten Ergebnis am ersten Loch","Wer am ersten Tee zuletzt war","Wird neu ausgelost"],1,"Die Ehre bekommt, wer das vorherige Loch am besten gespielt hat."],
+["vorrecht","Auf dem Fairway: wer spielt?",["Wer am nächsten beim Loch liegt","Wer am weitesten vom Loch entfernt ist","Wer die Ehre hatte","Immer der gleiche Spieler"],1,"Der Ball away spielt zuerst, sofern nicht Ready Golf gilt."],
+["vorrecht","Du spielst im Zählspiel versehentlich ausser der Reihe. Strafe?",["1 Strafschlag","2 Strafschläge","Keine","Schlag muss wiederholt werden"],2,"Im Zählspiel straflos. Nur im Lochspiel darf der Gegner den Schlag annullieren lassen."],
+["schonung","Was tust du mit einer Pitchmarke auf dem Grün?",["Liegenlassen, der Greenkeeper macht das","Reparieren: Rand einstechen, zur Mitte schieben, glätten","Mit dem Fuss festtreten","Nur reparieren, wenn sie von dir stammt"],1,"Nicht hebeln, sonst reisst die Wurzelschicht. Am besten die eigene und eine zweite."],
+["schonung","Wie verlässt du einen Bunker?",["Auf dem kürzesten Weg über die Kante","An der flachsten Stelle nahe beim Ball, danach harken","Über die steile Seite, damit du niemanden störst","Der Greenkeeper harkt später"],1,"Flach rein und raus, danach alle Spuren glattziehen."],
+["schonung","Ein Divot liegt neben deinem Schlag. Was tust du?",["Liegenlassen","Zurücklegen und antreten oder besanden","In den Rough werfen","Nur bei Turnieren zurücklegen"],1,"Divot zurücklegen und andrücken oder Sandmischung einfüllen."],
+["platz","Was bedeuten weisse Pfähle?",["Boden in Ausbesserung","Aus","Penalty Area","Distanzmarkierung"],1,"Weiss ist immer Aus: Schlag- und Distanzverlust, 1 Strafschlag."],
+["platz","Was bedeuten rote Pfähle?",["Aus","Seitliche Penalty Area","Boden in Ausbesserung","Sprinkleranlage"],1,"Rot heisst Penalty Area mit drei Erleichterungsoptionen."],
+["platz","Was bedeuten blaue Pfähle oder Linien?",["Penalty Area","Boden in Ausbesserung mit strafloser Erleichterung","Aus","Startpunkt für Anfänger"],1,"Boden in Ausbesserung: straflose Erleichterung mit 1 Schlägerlänge."],
+["platz","Wann ist der Ball im Aus?",["Wenn er die Linie berührt","Wenn er vollständig ausserhalb liegt","Wenn er hinter dem Pfahl liegt","Wenn du ihn nicht mehr siehst"],1,"Solange ein Teil des Balls die Grenze berührt, ist er noch im Platz."],
+["platz","Wie viele Bereiche des Platzes unterscheiden die Regeln?",["3","4","5","6"],2,"Abschlagsfläche, Gelände, Bunker, Penalty Areas, Grün."],
+["platz","Du spielst ein Par 4 in 3 Schlägen. Wie heisst das?",["Eagle","Birdie","Bogey","Par"],1,"Ein Schlag unter Par ist ein Birdie."],
+["platz","Was ist ein Bogey?",["1 unter Par","1 über Par","2 über Par","Ein Loch ohne Wertung"],1,"Bogey ist ein Schlag über Par, Doppelbogey zwei."],
+["ausruestung","Wie viele Schläger darfst du maximal im Bag haben?",["12","14","16","Unbegrenzt"],1,"Maximal 14 Schläger."],
+["ausruestung","Du entdeckst am 3. Loch einen 15. Schläger. Strafe im Zählspiel?",["Keine, wenn du ihn nicht benutzt hast","2 Schläge pro Loch, maximal 4","Disqualifikation","1 Strafschlag"],1,"Zwei Strafschläge pro betroffenem Loch, gedeckelt bei vier Schlägen. Schläger sofort ausser Betrieb nehmen."],
+["ausruestung","Ist ein Entfernungsmesser erlaubt?",["Nein, nie","Ja, für die reine Distanz, sofern keine Platzregel es verbietet","Nur mit Gefällefunktion","Nur im Training"],1,"Reine Distanzmessung ist erlaubt, Gefälle- und Windfunktion nicht."],
+["ausruestung","Welcher Schläger fliegt am weitesten?",["Sand Wedge","Eisen 9","Driver","Pitching Wedge"],2,"Kleine Zahl und wenig Loft heisst weit und flach."],
+["regeln","Wie lautet das Grundprinzip des Golfspiels?",["Spiele so schnell wie möglich","Spiele den Platz wie du ihn vorfindest und den Ball wie er liegt","Verbessere deine Lage nach Möglichkeit","Der Ball darf immer gereinigt werden"],1,"Daraus folgen fast alle Strafen für verbesserte Lagen."],
+["regeln","Wo darf der Ball beim Abschlag liegen?",["Beliebig auf dem Abschlagsgelände","Zwischen den Markierungen und bis 2 Schlägerlängen dahinter","Auf Höhe der Markierungen, keinen Zentimeter zurück","Bis 1 Schlägerlänge vor den Markierungen"],1,"Zwei Schlägerlängen Tiefe. Du selbst darfst ausserhalb stehen."],
+["regeln","Der Ball fällt beim Ansprechen vom Tee. Was gilt?",["1 Strafschlag","Zählt als Schlag","Straflos neu aufteen","Ball muss gespielt werden, wo er liegt"],2,"Solange du keinen Schlag mit Schwungabsicht gemacht hast, ist das straflos."],
+["regeln","Du schwingst voll durch und triffst den Ball überhaupt nicht. Was gilt?",["Kein Schlag, Pech gehabt","Der Schlag zählt","1 Strafschlag zusätzlich","Nur im Turnier zählt es"],1,"Ein Luftschlag mit Schwungabsicht zählt als Schlag."],
+["regeln","Dein Ball ist im Aus. Wie geht es weiter?",["Straflos droppen, wo er die Grenze überquert hat","1 Strafschlag, nochmals vom Ort des letzten Schlags","2 Strafschläge, dann weiterspielen","2 Schlägerlängen innerhalb der Grenze droppen"],1,"Schlag- und Distanzverlust: 1 Strafschlag und zurück an den letzten Ort."],
+["regeln","Wann musst du einen provisorischen Ball ankündigen?",["Nach dem Schlag","Bevor du ihn spielst","Erst wenn du den ersten Ball nicht findest","Gar nicht"],1,"Ohne Ansage wird der neue Ball sofort dein Ball im Spiel."],
+["regeln","Du findest deinen Originalball nach zwei Minuten im Platz, hast aber schon provisorisch gespielt. Was gilt?",["Du wählst den besseren Ball","Du musst den Originalball spielen","Du musst den provisorischen spielen","1 Strafschlag und provisorisch weiter"],1,"Solange der Originalball innerhalb der 3 Minuten gefunden wird, ist er im Spiel."],
+["regeln","Ab wann wird der provisorische Ball zum Ball im Spiel?",["Sofort nach dem Schlag","Sobald der Originalball verloren oder im Aus ist","Nach 3 Schlägen","Nach dem Grün"],1,"Oder wenn du ihn von näher am Loch spielst als die vermutete Stelle des Originals."],
+["regeln","Ein grosser Ast liegt an deinem Ball im Rough. Was darfst du?",["Nichts, Ball spielen wie er liegt","Ast als losen Naturstoff entfernen","Ast wegbiegen und festhalten","Straflos droppen"],1,"Lose Naturstoffe dürfen überall entfernt werden — auch im Bunker."],
+["regeln","Beim Entfernen eines Blatts bewegt sich dein Ball im Rough. Folge?",["Keine, weiterspielen","1 Strafschlag und Ball zurücklegen","2 Strafschläge","Ball von der neuen Stelle spielen"],1,"Ausserhalb des Grüns kostet das versehentliche Bewegen 1 Strafschlag, Ball zurücklegen."],
+["regeln","Eine Harke liegt direkt an deinem Ball. Was tust du?",["Ball spielen wie er liegt","Harke straflos entfernen, Ball nötigenfalls straflos zurücklegen","1 Strafschlag und droppen","Harke liegenlassen und den Schlag verweigern"],1,"Die Harke ist ein bewegliches Hemmnis."],
+["regeln","Du bist nicht sicher, ob es dein Ball ist. Wie gehst du korrekt vor?",["Einfach aufnehmen und anschauen","Ankündigen, markieren, aufnehmen, minimal reinigen, zurücklegen","Ball spielen und hoffen","Mitspieler entscheiden lassen"],1,"Ohne Ankündigung und Markierung kostet es 1 Strafschlag."],
+["regeln","Du spielst versehentlich den Ball deines Mitspielers. Strafe im Zählspiel?",["Keine","1 Strafschlag","2 Strafschläge und Fehler korrigieren","Disqualifikation"],2,"Zwei Strafschläge, dann mit dem eigenen Ball vom richtigen Ort weiterspielen."],
+["regeln","Darfst du hohes Gras hinter dem Ball platt drücken, um besser zu treffen?",["Ja, das gehört zum Ansprechen","Nein, das ist Verbessern der Lage: 2 Strafschläge","Ja, ausserhalb des Fairways","Nur mit dem Schläger, nicht mit der Hand"],1,"Lage, Stand und Schwungbahn dürfen nicht verbessert werden."],
+["erleichterung","Aus welcher Höhe droppst du?",["Schulterhöhe","Kniehöhe","Hüfthöhe","Direkt über dem Boden"],1,"Seit 2019 aus Kniehöhe, im Stehen gemessen."],
+["erleichterung","Der Ball rollt zweimal aus dem Erleichterungsbereich. Was tust du?",["Ein drittes Mal droppen","An die Stelle legen, wo er beim zweiten Droppen zuerst aufkam","Vom letzten Ort neu spielen","1 Strafschlag und droppen"],1,"Zweimal droppen, dann hinlegen."],
+["erleichterung","Dein Ball liegt in einer Pfütze auf dem Fairway. Was gilt?",["Ball spielen wie er liegt","Straflose Erleichterung, 1 Schlägerlänge vom nächstgelegenen Punkt","1 Strafschlag und droppen","Ball aufnehmen und reinigen, dann zurücklegen"],1,"Zeitweiliges Wasser ist ein ungewöhnliches Platzverhältnis: straflos."],
+["erleichterung","Dein Ball liegt auf einem befestigten Buggyweg. Was gilt?",["Ball spielen wie er liegt","Straflose Erleichterung am nächstgelegenen Punkt vollständiger Erleichterung","1 Strafschlag","2 Schlägerlängen straflos"],1,"Unbewegliches Hemmnis: nächstgelegener Punkt vollständiger Erleichterung plus 1 Schlägerlänge."],
+["erleichterung","Dein Ball liegt schlecht direkt hinter einem Baum. Erleichterung?",["Ja, 1 Schlägerlänge straflos","Ja, mit 1 Strafschlag 2 Schlägerlängen","Nein, aber du kannst ihn für 1 Strafschlag unspielbar erklären","Ja, straflos zurück auf die Linie"],2,"Bäume geben keine Erleichterung. Du kannst den Ball aber unspielbar erklären."],
+["erleichterung","Wie viele Erleichterungsoptionen hast du bei einer gelben Penalty Area?",["1","2","3","4"],1,"Schlag- und Distanzverlust oder auf der Linie zurück droppen, je 1 Strafschlag."],
+["erleichterung","Welche Option gibt es nur bei roten Penalty Areas?",["Straflos droppen","2 Schlägerlängen seitlich vom Kreuzungspunkt","Ball reinigen","Vom Abschlag neu starten"],1,"Die seitliche Option ist der Unterschied zwischen Rot und Gelb."],
+["erleichterung","Dein Ball liegt spielbar im Bachbett einer Penalty Area. Darfst du ihn spielen?",["Nein, nie","Ja, straflos, und du darfst den Schläger aufsetzen","Ja, aber mit 1 Strafschlag","Nur wenn kein Wasser fliesst"],1,"Seit 2019 gelten in Penalty Areas fast die gleichen Freiheiten wie im Gelände."],
+["erleichterung","Wer entscheidet, ob ein Ball unspielbar ist?",["Der Zähler","Die Spielleitung","Der Spieler selbst","Der Flight gemeinsam"],2,"Nur der Spieler — überall ausser in einer Penalty Area."],
+["erleichterung","Was kostet die Erklärung unspielbar?",["Nichts","1 Strafschlag","2 Strafschläge","Schlag- und Distanzverlust ohne Strafe"],1,"1 Strafschlag, dann eine der drei Optionen wählen."],
+["bunker","Was ist im Bunker verboten?",["Füsse eingraben","Schläger vor dem Ball in den Sand aufsetzen","Blätter entfernen","Die Harke wegnehmen"],1,"Aufsetzen, Probeschwung im Sand und Sandtesten kosten 2 Strafschläge."],
+["bunker","Was ist im Bunker erlaubt?",["Probeschwung mit Sandkontakt","Sand hinter dem Ball glätten","Lose Steine und Blätter entfernen","Sand testen mit der Hand"],2,"Lose Naturstoffe dürfen seit 2019 auch im Bunker entfernt werden."],
+["bunker","Dein Ball liegt unspielbar tief im Bunker. Günstigste Möglichkeit ausserhalb?",["Straflos ausserhalb droppen","1 Strafschlag ausserhalb droppen","2 Strafschläge, auf der Linie zurück ausserhalb des Bunkers","Gar nicht möglich"],2,"Für 1 Strafschlag musst du im Bunker bleiben, für 2 darfst du raus."],
+["bunker","Beim Gehen berührst du im Bunker den Sand mit dem Schläger. Strafe?",["2 Strafschläge","Keine, solange du den Sand nicht testest oder die Lage verbesserst","1 Strafschlag","Disqualifikation"],1,"Zufälliger Kontakt ohne Absicht ist straflos."],
+["gruen","Wie nimmst du den Ball auf dem Grün korrekt auf?",["Einfach aufheben und reinigen","Markieren, aufnehmen, reinigen, zurücklegen","Mit dem Putter zur Seite schieben","Nur nach Erlaubnis des Zählers"],1,"Ohne Markieren kostet es 1 Strafschlag."],
+["gruen","Was darfst du auf dem Grün ausbessern?",["Nur Pitchmarken","Pitchmarken, Spikemarken und alte Lochstopfen","Auch natürliche Unebenheiten","Nichts"],1,"Schäden ja, natürliche Unebenheiten und Aerifizierungslöcher nein."],
+["gruen","Dein Putt trifft die im Loch steckende Fahne. Strafe?",["1 Strafschlag","2 Strafschläge","Keine","Putt muss wiederholt werden"],2,"Seit 2019 darf die Fahne stecken bleiben."],
+["gruen","Dein Putt trifft den Ball eines Mitspielers, der auf dem Grün lag. Folge im Zählspiel?",["Keine","2 Strafschläge für dich","1 Strafschlag für den Mitspieler","Putt wiederholen"],1,"Darum vorher markieren lassen. Der getroffene Ball wird zurückgelegt."],
+["gruen","Du hast deinen Ball zurückgelegt, der Wind bewegt ihn. Was tust du?",["Von der neuen Stelle spielen","Straflos an die ursprüngliche Stelle zurücklegen","1 Strafschlag und zurücklegen","Neu markieren"],1,"Ein bereits zurückgelegter Ball auf dem Grün kommt an die alte Stelle zurück."],
+["gruen","Wie lange darfst du warten, wenn der Ball am Lochrand hängt?",["3 Sekunden","10 Sekunden","30 Sekunden","So lange du willst"],1,"10 Sekunden plus die Zeit, um zum Loch zu gehen."],
+["gruen","Wo darfst du losen Sand entfernen?",["Überall","Nur auf dem Grün","Nur im Bunker","Nur im Rough"],1,"Loser Sand und Erde sind nur auf dem Grün entfernbar."],
+["zaehlen","Wie viele Stableford-Punkte gibt ein Par?",["1","2","3","4"],1,"Par ist 2 Punkte, jeder Schlag darüber einer weniger."],
+["zaehlen","Wie viele Punkte gibt ein Netto-Doppelbogey?",["2","1","0","Minus 1"],2,"Ab Doppelbogey gibt es keine Punkte mehr — Ball aufnehmen."],
+["zaehlen","Wie viele Stableford-Punkte brauchst du über 18 Loch für das erste Handicap?",["30","32","36","40"],2,"36 Punkte über 18 Loch oder 18 über 9 Loch."],
+["zaehlen","Wer führt im Zählspiel deine Scorekarte?",["Du selbst","Dein Zähler, also ein Mitspieler","Die Spielleitung","Niemand, du meldest mündlich"],1,"Du führst die Karte des anderen, er deine. Beide unterschreiben."],
+["zaehlen","Du gibst eine Scorekarte mit einer zu tiefen Lochzahl ab. Folge?",["Die Zahl wird korrigiert","Disqualifikation","2 Strafschläge","Nichts, wenn es Versehen war"],1,"Eine zu hoch eingetragene Zahl bleibt hingegen bestehen."],
+["zaehlen","Was ist der Unterschied zwischen Zählspiel und Lochspiel?",["Es gibt keinen","Zählspiel addiert alle Schläge, Lochspiel gewinnt einzelne Löcher","Lochspiel wird nur über 9 Loch gespielt","Zählspiel gibt es nur im Turnier"],1,"Im Lochspiel zählt der Lochstand, nicht die Gesamtschlagzahl."],
+["zaehlen","Wie hoch ist die höchste Startvorgabe beim ersten Handicap?",["36","45","54","72"],2,"Das erste EGA Handicap beträgt 54 oder besser."],
+["pruefung","Wie viele Fragen umfasst die Theorieprüfung der Schweizer Platzreife?",["20","30","40","50"],2,"40 Fragen zu Etikette und Regeln."],
+["pruefung","Wie viele Antworten musst du richtig haben?",["24","26","28","32"],2,"Mindestens 28 von 40, also 70 Prozent."],
+["pruefung","Wie viele Bälle musst du beim Abschlagstest über 80 Meter schlagen?",["2 von 6","3 von 6","4 von 6","6 von 6"],1,"3 von 6 Bällen im Flug über 80 m (Frauen 70 m)."],
+["pruefung","Wie viele Schläge darfst du beim Putt-Parcours über 9 Löcher maximal brauchen?",["18","21","24","27"],1,"Maximal 21 Schläge auf dem 9-Loch-Parcours mit 3, 6 und 9 Metern."],
+["pruefung","Welche Merkregel hilft bei der Strafhöhe?",["Alles kostet 2 Schläge","1 Schlag für Erleichterung, 2 Schläge für Regelverstösse","1 Schlag im Bunker, 2 auf dem Grün","Strafen gibt es nur im Turnier"],1,"Erleichterung kaufst du dir mit 1 Schlag, echte Verstösse kosten 2."]
+];
+
+const TAGS = {etikette:"Etikette",tempo:"Spieltempo",vorrecht:"Vorrecht",schonung:"Schonung",platz:"Platz",ausruestung:"Ausrüstung",regeln:"Regeln",erleichterung:"Erleichterung",bunker:"Bunker",gruen:"Grün",zaehlen:"Zählweise",pruefung:"Prüfung"};
+
+/* ============ STATE ============ */
+const KEY="golf_pr_state_v1";
+let S={date:"",tasks:{},box:{},quiz:{best:0,runs:0},seen:{}};
+let dirty=false;
+
+let STORE="keiner";
+async function readRaw(){
+  if(window.storage){try{const r=await window.storage.get(KEY);if(r&&r.value){STORE="Claude";return r.value;}}catch(e){}}
+  try{const v=window.localStorage.getItem(KEY);if(v){STORE="Gerät";return v;}}catch(e){}
+  return null;
+}
+async function writeRaw(v){
+  let ok=[];
+  if(window.storage){try{await window.storage.set(KEY,v);ok.push("Claude");}catch(e){}}
+  try{window.localStorage.setItem(KEY,v);ok.push("Gerät");}catch(e){}
+  STORE=ok.length?ok.join(" + "):"keiner";
+  dirty=!ok.length;
+  return ok.length>0;
+}
+async function load(){
+  const raw=await readRaw();
+  if(raw){try{S=Object.assign(S,JSON.parse(raw));}catch(e){}}
+  if(!S.date){const d=new Date();d.setDate(d.getDate()+7);S.date=d.toISOString().slice(0,10);}
+  if(STORE==="keiner"){await writeRaw(JSON.stringify(S));}
+}
+async function save(){await writeRaw(JSON.stringify(S));}
+
+/* ============ HELPERS ============ */
+const $=(s,r)=>(r||document).querySelector(s);
+const esc=t=>t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function daysLeft(){
+  const t=new Date();t.setHours(0,0,0,0);
+  const d=new Date(S.date+"T00:00:00");
+  return Math.round((d-t)/86400000);
+}
+function totalTasks(){return PLAN.reduce((a,p)=>a+p.tasks.length,0)}
+function doneTasks(){return Object.values(S.tasks).filter(Boolean).length}
+
+function paintHeader(){
+  const dl=daysLeft();
+  $("#cd").textContent=dl<0?"–":dl;
+  $("#cd").nextElementSibling.textContent=dl===0?"Heute ist Kurstag":dl===1?"Tag bis Kurs":dl<0?"Kurs vorbei":"Tage bis Kurs";
+  const learned=Object.values(S.box).filter(b=>b>=4).length;
+  const pct=Math.round((doneTasks()/totalTasks()*0.5+learned/FC.length*0.5)*100);
+  $("#prog").style.width=pct+"%";
+  $("#progpct").textContent=pct+"%";
+  $("#progtxt").textContent=doneTasks()+" von "+totalTasks()+" Aufgaben · "+learned+" von "+FC.length+" Karten sitzen";
+}
+
+/* ============ TAB: PLAN ============ */
+let openDay=1;
+function viewPlan(){
+  const dl=daysLeft();
+  let s='<h2 class="sec">7-Tage-Plan</h2><p class="lead">Ein Thema pro Tag, rund 25 Minuten. Tippe auf einen Tag, um ihn zu öffnen.</p>';
+  s+='<div class="strip">';
+  PLAN.forEach(p=>{
+    const done=p.tasks.every((_,i)=>S.tasks["t"+p.d+"_"+i]);
+    s+='<button class="cell '+(p.d===openDay?"on ":"")+(done?"done":"")+'" data-day="'+p.d+'"><b>'+p.d+'</b><span>'+p.th+'</span><em>'+(done?"✓":"·")+'</em></button>';
+  });
+  s+='</div>';
+  const p=PLAN.find(x=>x.d===openDay);
+  s+='<div class="card"><h3 style="font-size:17px;margin-bottom:2px">Tag '+p.d+": "+p.th+'</h3><p class="mini" style="margin:0 0 8px">'+p.fokus+'</p>';
+  p.tasks.forEach((t,i)=>{
+    const id="t"+p.d+"_"+i;
+    s+='<div class="task"><input type="checkbox" id="'+id+'" data-task="'+id+'"'+(S.tasks[id]?" checked":"")+'><label for="'+id+'">'+t+'</label></div>';
+  });
+  s+='</div>';
+  s+='<div class="card"><h3 style="font-size:15px;margin-bottom:6px">Kursdatum</h3><input type="date" id="dateIn" value="'+S.date+'">'
+  +'<p class="mini" style="margin:8px 0 0">Speicherort für deinen Fortschritt: '+(STORE==="keiner"?"keiner — Häkchen und Karteikarten gehen beim Schliessen verloren. Datei herunterladen und direkt im Browser öffnen, dann wird gespeichert.":STORE)+'.</p><p class="mini" style="margin:8px 0 0">'+(dl>=0?"Noch "+dl+" Tage. Der Plan oben verteilt sich auf die verbleibende Zeit — wenn es knapp wird, nimm zwei Tage an einem Abend.":"Der Kurstermin liegt in der Vergangenheit. Datum anpassen, wenn du weiterüben willst.")+'</p></div>';
+  s+='<div class="card"><h3 style="font-size:15px;margin-bottom:6px">Am Kurstag</h3><ul style="margin:0;padding-left:18px;font-size:14.5px"><li>Wetterfeste Kleidung, du gehst ab dem ersten Tag auf den Platz.</li><li>Handschuh, Tee, Ballmarker, Pitchgabel mitnehmen.</li><li>Fragen notieren, die dir beim Lernen unklar geblieben sind.</li><li>Früh da sein, Ballmarke und Nummer parat haben.</li></ul></div>';
+  return s;
+}
+
+/* ============ TAB: WISSEN ============ */
+function viewWissen(){
+  let s='<h2 class="sec">Lernbroschüre</h2><p class="lead">18 Kapitel, in Prüfungsreihenfolge. Tippe auf einen Titel, um das Kapitel zu öffnen. Die gelben Kästen sind die Merkhilfen — die lohnen sich wörtlich.</p>';
+  CH.forEach((c,i)=>{
+    s+='<details class="ch"'+(i===0?" open":"")+'><summary><span class="num">'+c.n+'</span>'+c.t+'</summary><div class="ch-body">'+c.h+'</div></details>';
+  });
+  return s;
+}
+
+/* ============ TAB: KARTEN ============ */
+let deck=[],cur=0,flipped=false,filter="all";
+function boxOf(i){return S.box[i]||1}
+function buildDeck(){
+  deck=FC.map((c,i)=>i).filter(i=>filter==="all"||FC[i][0]===filter);
+  deck.sort((a,b)=>boxOf(a)-boxOf(b)||Math.random()-0.5);
+  cur=0;flipped=false;
+}
+function viewKarten(){
+  if(!deck.length)buildDeck();
+  const counts=[1,2,3,4,5].map(b=>FC.filter((_,i)=>boxOf(i)===b).length);
+  let s='<h2 class="sec">Karteikarten</h2><p class="lead">Leitner-System: Was du weisst, wandert eine Box weiter. Was du nicht weisst, fällt zurück auf 1. Ziel ist, alles in Box 5 zu bringen.</p>';
+  s+='<div class="boxes">'+counts.map((c,i)=>'<div class="box"><b>'+c+'</b><span>Box '+(i+1)+'</span></div>').join("")+'</div>';
+  s+='<div style="margin-bottom:10px"><button class="pill'+(filter==="all"?" on":"")+'" data-filter="all">Alle</button>';
+  Object.keys(TAGS).forEach(k=>{s+='<button class="pill'+(filter===k?" on":"")+'" data-filter="'+k+'">'+TAGS[k]+'</button>';});
+  s+='</div>';
+  if(cur>=deck.length){
+    s+='<div class="card" style="text-align:center;padding:26px 16px"><div class="score">'+deck.length+'</div><p style="margin:6px 0 14px">Karten dieser Runde durch. Gut gemacht.</p><button class="b" id="again">Nochmal mischen</button></div>';
+    return s;
+  }
+  const c=FC[deck[cur]];
+  s+='<div class="fc"><div class="tag">'+TAGS[c[0]]+' · Box '+boxOf(deck[cur])+' · '+(cur+1)+' von '+deck.length+'</div><div class="q">'+esc(c[1])+'</div>'+(flipped?'<div class="a">'+esc(c[2])+'</div>':'')+'</div>';
+  s+=flipped
+    ? '<div class="btns"><button class="b warnb" id="nope">Nochmal üben</button><button class="b" id="yep">Wusste ich</button></div>'
+    : '<div class="btns"><button class="b" id="flip">Antwort zeigen</button></div>';
+  return s;
+}
+
+/* ============ TAB: QUIZ ============ */
+let qmode=null,qlist=[],qi=0,qans=[],qpick=-1;
+function startQuiz(mode,tag){
+  qmode=mode;qi=0;qans=[];qpick=-1;
+  let pool=QZ.map((q,i)=>i);
+  if(tag)pool=pool.filter(i=>QZ[i][0]===tag);
+  pool.sort(()=>Math.random()-0.5);
+  qlist=mode==="exam"?pool.slice(0,Math.min(40,pool.length)):pool.slice(0,Math.min(10,pool.length));
+}
+function viewQuiz(){
+  if(!qmode){
+    let s='<h2 class="sec">Quiz</h2><p class="lead">Die Prüfung verlangt 28 von 40 richtigen Antworten. Simuliere sie mindestens zweimal, bevor du in den Kurs gehst.</p>';
+    s+='<div class="card"><h3 style="font-size:17px">Prüfungssimulation</h3><p class="mini" style="margin:4px 0 12px">40 Fragen quer durch alle Themen. Bestanden ab 28 richtigen.</p><button class="b" data-quiz="exam">Simulation starten</button>';
+    if(S.quiz.runs)s+='<p class="mini" style="margin:10px 0 0">Bisher '+S.quiz.runs+' Durchgänge, bestes Resultat '+S.quiz.best+' von 40.</p>';
+    s+='</div>';
+    s+='<div class="card"><h3 style="font-size:17px">Themenquiz</h3><p class="mini" style="margin:4px 0 10px">Bis zu 10 Fragen zu einem Thema.</p>';
+    Object.keys(TAGS).forEach(k=>{const n=QZ.filter(q=>q[0]===k).length;if(n)s+='<button class="pill" data-quiz="'+k+'">'+TAGS[k]+' ('+n+')</button>';});
+    s+='</div>';
+    return s;
+  }
+  if(qi>=qlist.length){
+    const right=qans.filter(Boolean).length;
+    const pass=qmode==="exam"?right>=28:right>=Math.ceil(qlist.length*0.7);
+    let s='<div class="card" style="text-align:center;padding:26px 16px">';
+    s+='<div class="score" style="color:'+(pass?"var(--fair)":"var(--pin)")+'">'+right+' / '+qlist.length+'</div>';
+    s+='<p style="margin:8px 0 4px;font-weight:600">'+(pass?"Bestanden":"Noch nicht bestanden")+'</p>';
+    s+='<p class="mini" style="margin:0 0 16px">'+(qmode==="exam"?"Prüfungsgrenze: 28 von 40.":"Ziel: 70 Prozent richtig.")+'</p>';
+    s+='<div class="btns"><button class="b ghost" id="qhome">Zurück</button><button class="b" id="qretry">Nochmal</button></div></div>';
+    const wrong=qlist.filter((_,i)=>!qans[i]);
+    if(wrong.length){
+      s+='<h2 class="sec" style="font-size:17px">Diese nochmals anschauen</h2>';
+      wrong.forEach(idx=>{const q=QZ[idx];s+='<div class="card"><b style="font-size:14.5px">'+esc(q[1])+'</b><p style="margin:7px 0 0;font-size:14px"><b>'+esc(q[2][q[3]])+'</b><br><span class="mini">'+esc(q[4])+'</span></p></div>';});
+    }
+    return s;
+  }
+  const q=QZ[qlist[qi]];
+  let s='<div class="qhead"><span>'+(qmode==="exam"?"Prüfungssimulation":TAGS[qmode])+'</span><span>Frage '+(qi+1)+' von '+qlist.length+' · '+qans.filter(Boolean).length+' richtig</span></div>';
+  s+='<div class="card"><b style="font-size:16px;line-height:1.35;display:block">'+esc(q[1])+'</b></div>';
+  q[2].forEach((o,i)=>{
+    let cls="opt";
+    if(qpick>-1){if(i===q[3])cls+=" right";else if(i===qpick)cls+=" wrong";}
+    s+='<button class="'+cls+'" data-opt="'+i+'"'+(qpick>-1?" disabled":"")+'>'+esc(o)+'</button>';
+  });
+  if(qpick>-1){
+    s+='<div class="expl">'+esc(q[4])+'</div>';
+    s+='<button class="b" id="qnext">'+(qi+1>=qlist.length?"Auswertung":"Weiter")+'</button>';
+  }
+  s+='<p style="text-align:center;margin:14px 0 0"><button class="pill" id="qhome">Quiz abbrechen</button></p>';
+  return s;
+}
+
+/* ============ TAB: METHODE ============ */
+function viewMethode(){
+  return `
+<h2 class="sec">So lernst du das in einer Woche</h2>
+<p class="lead">Der Stoff ist klein, aber verstreut. Was ihn schnell macht, ist nicht mehr Lesen, sondern häufiges Abrufen.</p>
+
+<div class="card"><h3 style="font-size:16px;margin-bottom:5px">1. Abrufen statt nachlesen</h3>
+<p class="mini" style="margin:0">Lesen fühlt sich produktiv an und bleibt schlecht hängen. Deck die Antwort ab und beantworte die Frage laut, bevor du nachschaust. Jeder Abruf aus dem Kopf ist etwa doppelt so viel wert wie ein Durchlesen.</p></div>
+
+<div class="card"><h3 style="font-size:16px;margin-bottom:5px">2. Verteilen statt bündeln</h3>
+<p class="mini" style="margin:0">Vier mal 20 Minuten über vier Tage schlagen zwei Stunden am Vorabend deutlich. Das Leitner-System in den Karteikarten macht das automatisch: schwierige Karten kommen häufiger, sitzende seltener.</p></div>
+
+<div class="card"><h3 style="font-size:16px;margin-bottom:5px">3. Mischen statt blockweise</h3>
+<p class="mini" style="margin:0">Wenn du zehn Bunkerfragen hintereinander löst, lernst du das Thema. In der Prüfung kommen sie gemischt. Nach dem ersten Durchgang immer die Prüfungssimulation nutzen, nicht nur Themenquiz.</p></div>
+
+<div class="card"><h3 style="font-size:16px;margin-bottom:5px">4. In Situationen denken</h3>
+<p class="mini" style="margin:0">Regeln merkt man sich schlecht als Text und gut als Szene. Stell dir bei jeder Regel eine konkrete Lage vor: dein Ball im Bach am 4. Loch, die Harke neben deinem Ball, der Buggyweg. Wenn du im Kurs auf den Platz gehst, hänge jede Regel an eine Stelle, die du siehst.</p></div>
+
+<div class="card"><h3 style="font-size:16px;margin-bottom:5px">5. Erklären</h3>
+<p class="mini" style="margin:0">Erkläre einer Person ohne Golfbezug in zwei Minuten, was ein provisorischer Ball ist und wann man ihn braucht. Wo du ins Stocken gerätst, ist die Lücke. Das ist der schnellste Lückentest, den es gibt.</p></div>
+
+<h2 class="sec" style="font-size:18px">Merkhilfen, die reichen</h2>
+<div class="merk"><b>Etikette</b><b style="font-size:15px;color:#10231A">Sehr ruhige Profis vermeiden Schäden</b>Sicherheit, Rücksicht, Pace of Play, Vorrecht, Schonung</div>
+<div class="merk"><b>Strafhöhe</b><b style="font-size:15px;color:#10231A">1 kaufen, 2 verstossen</b>1 Schlag, wenn du dir Erleichterung kaufst. 2 Schläge, wenn du eine Regel verletzt hast.</div>
+<div class="merk"><b>Penalty Area</b><b style="font-size:15px;color:#10231A">Gelb 2, Rot 3</b>Rot hat als Einzige die seitliche Option mit 2 Schlägerlängen.</div>
+<div class="merk"><b>Pfahlfarben</b><b style="font-size:15px;color:#10231A">Weiss raus, Gelb quer, Rot längs, Blau gratis</b>Aus, frontale Penalty Area, seitliche Penalty Area, Boden in Ausbesserung.</div>
+<div class="merk"><b>Zahlen</b><b style="font-size:15px;color:#10231A">14 – 3 – 28 – 36 – 54</b>14 Schläger, 3 Minuten Suchzeit, 28 von 40 richtigen Antworten, 36 Stableford-Punkte, Startvorgabe 54.</div>
+<div class="merk"><b>Bunker</b><b style="font-size:15px;color:#10231A">Information und Verbesserung sind verboten</b>Alles, was dir etwas über den Sand verrät oder die Lage verbessert, kostet 2 Schläge. Der Rest ist erlaubt.</div>
+
+<h2 class="sec" style="font-size:18px">Wochenrhythmus</h2>
+<div class="card"><ul style="margin:0;padding-left:18px;font-size:14.5px">
+<li>Morgens 5 Minuten: alle fälligen Karteikarten.</li>
+<li>Abends 20 Minuten: das Tageskapitel lesen, danach sofort das passende Themenquiz.</li>
+<li>Vor dem Schlafen 2 Minuten: die Merkhilfen laut aufsagen. Schlaf festigt genau das.</li>
+<li>Ab Tag 5: jeden Tag eine Prüfungssimulation, egal wie gut die letzte lief.</li>
+</ul></div>`;
+}
+
+/* ============ RENDER ============ */
+const TABS=[
+["plan","Plan",'<path d="M4 5h16v15H4z"/><path d="M4 9h16M9 3v4M15 3v4"/>'],
+["wissen","Wissen",'<path d="M4 4h7a2 2 0 012 2v14a2 2 0 00-2-2H4z"/><path d="M20 4h-7a2 2 0 00-2 2v14a2 2 0 012-2h7z"/>'],
+["karten","Karten",'<path d="M3 8h13v11H3z"/><path d="M7 5h13v11"/>'],
+["quiz","Quiz",'<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.6 2.6 0 015 1c0 1.7-2.5 2-2.5 3.5"/><path d="M12 17h.01"/>'],
+["methode","Methode",'<path d="M12 3l2.4 5.6L20 9.4l-4 4 1 5.6-5-2.8-5 2.8 1-5.6-4-4 5.6-.8z"/>']
+];
+let tab="plan";
+function renderNav(){
+  $("#nav").innerHTML=TABS.map(t=>'<button data-tab="'+t[0]+'" aria-selected="'+(tab===t[0])+'"><svg viewBox="0 0 24 24">'+t[2]+'</svg>'+t[1]+'</button>').join("");
+}
+function render(){
+  TABS.forEach(t=>{$("#v-"+t[0]).hidden=(t[0]!==tab);});
+  const el=$("#v-"+tab);
+  if(tab==="plan")el.innerHTML=viewPlan();
+  if(tab==="wissen"&&!el.dataset.built){el.innerHTML=viewWissen();el.dataset.built="1";}
+  if(tab==="karten")el.innerHTML=viewKarten();
+  if(tab==="quiz")el.innerHTML=viewQuiz();
+  if(tab==="methode"&&!el.dataset.built){el.innerHTML=viewMethode();el.dataset.built="1";}
+  renderNav();
+  paintHeader();
+}
+
+/* ============ EVENTS ============ */
+document.addEventListener("click",e=>{
+  const t=e.target.closest("button");
+  if(!t)return;
+  if(t.dataset.tab){tab=t.dataset.tab;render();window.scrollTo(0,0);return;}
+  if(t.dataset.day){openDay=+t.dataset.day;render();return;}
+  if(t.dataset.filter){filter=t.dataset.filter;buildDeck();render();return;}
+  if(t.id==="flip"){flipped=true;render();return;}
+  if(t.id==="yep"||t.id==="nope"){
+    const i=deck[cur];
+    S.box[i]=t.id==="yep"?Math.min(5,boxOf(i)+1):1;
+    save();cur++;flipped=false;render();return;
+  }
+  if(t.id==="again"){buildDeck();render();return;}
+  if(t.dataset.quiz){startQuiz(t.dataset.quiz==="exam"?"exam":t.dataset.quiz,t.dataset.quiz==="exam"?null:t.dataset.quiz);render();window.scrollTo(0,0);return;}
+  if(t.dataset.opt!==undefined&&qpick<0){
+    qpick=+t.dataset.opt;
+    qans[qi]=qpick===QZ[qlist[qi]][3];
+    render();return;
+  }
+  if(t.id==="qnext"){
+    qi++;qpick=-1;
+    if(qi>=qlist.length&&qmode==="exam"){
+      const r=qans.filter(Boolean).length;
+      S.quiz.runs=(S.quiz.runs||0)+1;
+      S.quiz.best=Math.max(S.quiz.best||0,r);
+      save();
+    }
+    render();window.scrollTo(0,0);return;
+  }
+  if(t.id==="qretry"){startQuiz(qmode,qmode==="exam"?null:qmode);render();window.scrollTo(0,0);return;}
+  if(t.id==="qhome"){qmode=null;render();window.scrollTo(0,0);return;}
+});
+document.addEventListener("change",e=>{
+  if(e.target.dataset.task){S.tasks[e.target.dataset.task]=e.target.checked;save();paintHeader();
+    const p=PLAN.find(x=>x.d===openDay);
+    const strip=document.querySelector('.cell[data-day="'+openDay+'"]');
+    if(strip&&p){const done=p.tasks.every((_,i)=>S.tasks["t"+p.d+"_"+i]);strip.classList.toggle("done",done);strip.querySelector("em").textContent=done?"✓":"·";}
+  }
+  if(e.target.id==="dateIn"){S.date=e.target.value;save();paintHeader();render();}
+});
+
+load().then(()=>{buildDeck();render();});
+
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});
+}
+
+</script>
+</body>
+</html>
