@@ -15,6 +15,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <style>
 :root{
   --ink:#10231A;
@@ -175,6 +178,51 @@ button.b:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .pill.on{background:var(--fair);border-color:var(--fair);color:#fff}
 input[type=date]{font-family:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:inherit}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- responsive / mobile ---------- */
+body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+.top{padding-top:calc(14px + env(safe-area-inset-top))}
+.app{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+.ch-body table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+input,textarea,select,button{font-size:16px}
+@media (max-width:380px){
+  .top h1{font-size:18px}
+  .count b{font-size:25px}
+  .score{font-size:36px}
+  .fc{padding:18px 14px;min-height:180px}
+  .fc .q{font-size:17px}
+  nav button{font-size:10px;padding:8px 1px 7px}
+  nav button svg{width:18px;height:18px}
+}
+
+/* ---------- modal ---------- */
+.modal-bg{position:fixed;inset:0;background:rgba(16,35,26,.6);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal{background:var(--card);border-radius:14px;padding:22px 20px;max-width:380px;width:100%;max-height:88vh;overflow-y:auto}
+.modal h2{font-size:19px;margin-bottom:6px}
+.modal p.mini{margin:0 0 14px}
+.modal input[type=text],.modal input[type=email],.modal input[type=password]{
+  width:100%;font-family:inherit;font-size:16px;padding:11px 12px;border:1px solid var(--line);
+  border-radius:9px;background:var(--paper);color:inherit;margin-bottom:10px;
+}
+.modal .err{color:var(--pin);font-size:13px;margin:-2px 0 10px}
+
+/* ---------- admin ---------- */
+.adminwrap{max-width:620px;margin:0 auto;padding:0 16px 40px}
+.adminbar{margin:0 -16px 16px;padding:14px 16px 12px;background:var(--fair-dk);color:#EDF3EE;border-bottom:3px solid var(--sand);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.adminbar h1{font-size:18px;color:#fff}
+.adminbar button{font-family:inherit;font-size:12.5px;color:#AFC7B8;background:none;border:1px solid #2A5C45;border-radius:8px;padding:7px 10px;cursor:pointer}
+.urow{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.urow .uhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+.urow .uname{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:16px}
+.urow .uwhen{font-size:11px;color:var(--ink-soft);flex:none}
+.ustats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.ustats .u{flex:1;min-width:72px;text-align:center;background:var(--paper);border-radius:8px;padding:6px 4px}
+.ustats .u b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:15px}
+.ustats .u span{font-size:9.5px;color:var(--ink-soft)}
+.utags{display:flex;gap:5px;flex-wrap:wrap}
+.utags .t{font-size:10.5px;padding:3px 7px;border-radius:99px;border:1px solid var(--line);color:var(--ink-soft)}
+.utags .t.weak{border-color:var(--pin);color:var(--pin)}
+.utags .t.strong{border-color:var(--fair);color:var(--fair)}
 </style>
 </head>
 <body>
@@ -190,6 +238,7 @@ input[type=date]{font-family:inherit;font-size:14px;padding:8px 10px;border:1px 
     </div>
     <div class="bar"><i id="prog"></i></div>
     <div class="bar-lab"><span id="progtxt">Noch nichts gelernt</span><span id="progpct">0%</span></div>
+    <div style="text-align:right;margin-top:5px"><a href="#admin" style="font-size:10px;color:#5C7A67;text-decoration:none">⚙ Admin</a></div>
   </header>
 
   <nav id="nav"></nav>
@@ -708,8 +757,64 @@ const TAGS = {etikette:"Etikette",tempo:"Spieltempo",vorrecht:"Vorrecht",schonun
 
 /* ============ STATE ============ */
 const KEY="golf_pr_state_v1";
-let S={date:"",tasks:{},box:{},quiz:{best:0,runs:0},seen:{}};
+let S={date:"",tasks:{},box:{},quiz:{best:0,runs:0},seen:{},name:""};
 let dirty=false;
+
+/* ============ CLOUD SYNC (Firebase) ============
+   Anleitung zum Einrichten: siehe README.md, Abschnitt "Firebase einrichten".
+   Ohne gültige Werte hier läuft die App normal weiter, nur ohne Cloud-Sync
+   und ohne Admin-Ansicht. */
+const firebaseConfig={
+  apiKey:"DEIN_API_KEY",
+  authDomain:"DEIN_PROJECT.firebaseapp.com",
+  projectId:"DEIN_PROJECT",
+  storageBucket:"DEIN_PROJECT.appspot.com",
+  messagingSenderId:"DEIN_SENDER_ID",
+  appId:"DEIN_APP_ID"
+};
+let fbReady=false,fbAuth=null,fbDb=null,fbAdminAuth=null,fbAdminDb=null,pushTimer=null;
+function initFirebase(){
+  if(typeof firebase==="undefined"||!firebaseConfig.apiKey||firebaseConfig.apiKey.indexOf("DEIN_")===0)return;
+  try{
+    const app=firebase.initializeApp(firebaseConfig);
+    fbAuth=app.auth();fbDb=app.firestore();
+    fbDb.enablePersistence({synchronizeTabs:true}).catch(()=>{});
+    const adminApp=firebase.initializeApp(firebaseConfig,"admin");
+    fbAdminAuth=adminApp.auth();fbAdminDb=adminApp.firestore();
+    fbReady=true;
+    fbAuth.onAuthStateChanged(u=>{if(!u)fbAuth.signInAnonymously().catch(()=>{});else pushCloud();});
+  }catch(e){fbReady=false;}
+}
+function summarize(){
+  const perTag={};
+  Object.keys(TAGS).forEach(k=>{perTag[k]={learned:0,total:0};});
+  FC.forEach((c,i)=>{const tag=c[0];if(!perTag[tag])return;perTag[tag].total++;if((S.box[i]||1)>=4)perTag[tag].learned++;});
+  return{
+    name:S.name||"",
+    tasksDone:doneTasks(),
+    totalTasks:totalTasks(),
+    cardsLearned:Object.values(S.box).filter(b=>b>=4).length,
+    totalCards:FC.length,
+    quizBest:S.quiz.best||0,
+    quizRuns:S.quiz.runs||0,
+    perTag,
+    updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+  };
+}
+function pushCloud(){
+  if(!fbReady||!fbAuth.currentUser||!S.name)return;
+  clearTimeout(pushTimer);
+  pushTimer=setTimeout(()=>{
+    fbDb.collection("users").doc(fbAuth.currentUser.uid).set(summarize(),{merge:true}).catch(()=>{});
+  },1500);
+}
+function timeAgo(d){
+  const s=Math.round((Date.now()-d.getTime())/1000);
+  if(s<60)return"gerade eben";
+  if(s<3600)return Math.round(s/60)+" Min.";
+  if(s<86400)return Math.round(s/3600)+" Std.";
+  return Math.round(s/86400)+" Tage";
+}
 
 let STORE="keiner";
 async function readRaw(){
@@ -731,7 +836,7 @@ async function load(){
   if(!S.date){const d=new Date();d.setDate(d.getDate()+7);S.date=d.toISOString().slice(0,10);}
   if(STORE==="keiner"){await writeRaw(JSON.stringify(S));}
 }
-async function save(){await writeRaw(JSON.stringify(S));}
+async function save(){await writeRaw(JSON.stringify(S));pushCloud();}
 
 /* ============ HELPERS ============ */
 const $=(s,r)=>(r||document).querySelector(s);
@@ -745,6 +850,7 @@ function totalTasks(){return PLAN.reduce((a,p)=>a+p.tasks.length,0)}
 function doneTasks(){return Object.values(S.tasks).filter(Boolean).length}
 
 function paintHeader(){
+  $("#subtitle").textContent=S.name?"Hallo "+S.name+" · Vorbereitung Regel- und Etikettenkurs":"Vorbereitung Regel- und Etikettenkurs";
   const dl=daysLeft();
   $("#cd").textContent=dl<0?"–":dl;
   $("#cd").nextElementSibling.textContent=dl===0?"Heute ist Kurstag":dl===1?"Tag bis Kurs":dl<0?"Kurs vorbei":"Tage bis Kurs";
@@ -905,6 +1011,97 @@ function viewMethode(){
 </ul></div>`;
 }
 
+/* ============ NAME GATE ============ */
+function renderNameGate(){
+  const bg=document.createElement("div");
+  bg.className="modal-bg";
+  bg.id="namegate";
+  bg.innerHTML='<div class="modal"><h2>Willkommen</h2>'
+    +'<p class="mini">Wie heisst du? Unter diesem Namen wird dein Lernfortschritt gespeichert.</p>'
+    +'<input type="text" id="nameIn" placeholder="Vorname" maxlength="40" autocomplete="given-name">'
+    +'<div class="err" id="nameErr" hidden>Bitte einen Namen eingeben.</div>'
+    +'<button class="b" id="nameOk">Los geht&rsquo;s</button></div>';
+  document.body.appendChild(bg);
+  const go=()=>{
+    const v=$("#nameIn",bg).value.trim();
+    if(!v){$("#nameErr",bg).hidden=false;return;}
+    S.name=v;save();bg.remove();buildDeck();render();
+  };
+  $("#nameOk",bg).addEventListener("click",go);
+  $("#nameIn",bg).addEventListener("keydown",e=>{if(e.key==="Enter")go();});
+  $("#nameIn",bg).focus();
+}
+
+/* ============ ADMIN ============ */
+function renderAdmin(){
+  document.querySelector(".app").hidden=true;
+  const old=document.getElementById("adminroot");
+  if(old)old.remove();
+  const root=document.createElement("div");
+  root.id="adminroot";
+  root.className="adminwrap";
+  document.body.appendChild(root);
+  const back=()=>{location.hash="";};
+
+  if(!fbReady){
+    root.innerHTML='<div class="adminbar"><h1>Admin</h1><button id="admBack">Zurück</button></div>'
+      +'<div class="card">Cloud-Sync ist nicht konfiguriert. Firebase-Zugangsdaten fehlen in index.html — siehe README.</div>';
+    $("#admBack",root).onclick=back;
+    return;
+  }
+  if(!fbAdminAuth.currentUser){
+    root.innerHTML='<div class="adminbar"><h1>Admin-Login</h1><button id="admBack">Zurück</button></div>'
+      +'<div class="modal" style="max-width:420px;margin:0 auto">'
+      +'<input type="email" id="admEmail" placeholder="E-Mail" autocomplete="username">'
+      +'<input type="password" id="admPass" placeholder="Passwort" autocomplete="current-password">'
+      +'<div class="err" id="admErr" hidden></div>'
+      +'<button class="b" id="admGo">Anmelden</button></div>';
+    $("#admBack",root).onclick=back;
+    $("#admGo",root).onclick=()=>{
+      const email=$("#admEmail",root).value.trim(),pass=$("#admPass",root).value;
+      const err=$("#admErr",root);err.hidden=true;
+      fbAdminAuth.signInWithEmailAndPassword(email,pass).then(renderAdmin)
+        .catch(e=>{err.textContent="Anmeldung fehlgeschlagen: "+e.message;err.hidden=false;});
+    };
+    return;
+  }
+
+  root.innerHTML='<div class="adminbar"><h1>Lernfortschritt aller Nutzer</h1><button id="admOut">Abmelden</button></div><div class="card" id="admBody">Lade…</div>';
+  $("#admOut",root).onclick=()=>{fbAdminAuth.signOut().then(renderAdmin);};
+  fbAdminDb.collection("users").get().then(snap=>{
+    const rows=[];
+    snap.forEach(doc=>rows.push(doc.data()));
+    const pctOf=r=>((r.tasksDone||0)/Math.max(1,r.totalTasks||1)*0.5+(r.cardsLearned||0)/Math.max(1,r.totalCards||1)*0.5);
+    rows.sort((a,b)=>pctOf(b)-pctOf(a));
+    const body=$("#admBody",root);
+    if(!rows.length){body.textContent="Noch keine Nutzerdaten vorhanden.";return;}
+    let html="";
+    rows.forEach(r=>{
+      const pct=Math.round(pctOf(r)*100);
+      const when=r.updatedAt&&r.updatedAt.toDate?timeAgo(r.updatedAt.toDate()):"–";
+      html+='<div class="urow"><div class="uhead"><span class="uname">'+esc(r.name||"Unbenannt")+'</span><span class="uwhen">'+when+'</span></div>';
+      html+='<div class="ustats">'
+        +'<div class="u"><b>'+pct+'%</b><span>Fortschritt</span></div>'
+        +'<div class="u"><b>'+(r.tasksDone||0)+'/'+(r.totalTasks||0)+'</b><span>Aufgaben</span></div>'
+        +'<div class="u"><b>'+(r.cardsLearned||0)+'/'+(r.totalCards||0)+'</b><span>Karten sitzen</span></div>'
+        +'<div class="u"><b>'+(r.quizBest||0)+'/40</b><span>Bestes Quiz</span></div></div>';
+      if(r.perTag){
+        html+='<div class="utags">';
+        Object.keys(TAGS).forEach(k=>{
+          const t=r.perTag[k];
+          if(!t||!t.total)return;
+          const ratio=t.learned/t.total;
+          const cls=ratio>=0.8?"strong":(ratio<0.34?"weak":"");
+          html+='<span class="t '+cls+'">'+TAGS[k]+" "+t.learned+"/"+t.total+'</span>';
+        });
+        html+='</div>';
+      }
+      html+='</div>';
+    });
+    body.outerHTML='<div id="admBody">'+html+'</div>';
+  }).catch(e=>{$("#admBody",root).textContent="Fehler beim Laden: "+e.message;});
+}
+
 /* ============ RENDER ============ */
 const TABS=[
 ["plan","Plan",'<path d="M4 5h16v15H4z"/><path d="M4 9h16M9 3v4M15 3v4"/>'],
@@ -971,7 +1168,19 @@ document.addEventListener("change",e=>{
   if(e.target.id==="dateIn"){S.date=e.target.value;save();paintHeader();render();}
 });
 
-load().then(()=>{buildDeck();render();});
+function boot(){
+  const gate=document.getElementById("namegate");
+  if(gate)gate.remove();
+  if(location.hash==="#admin"){renderAdmin();return;}
+  document.querySelector(".app").hidden=false;
+  const old=document.getElementById("adminroot");
+  if(old)old.remove();
+  if(!S.name){renderNameGate();return;}
+  buildDeck();render();
+}
+window.addEventListener("hashchange",boot);
+initFirebase();
+load().then(boot);
 
 
 if("serviceWorker" in navigator){
